@@ -2,7 +2,7 @@
 export interface ExpensesInTheMonth{
     monthId:number;
     monthName:string;
-    expensesMonth:Expense;
+    expensesMonth:Expense[];
 }
 
 export interface Expense{

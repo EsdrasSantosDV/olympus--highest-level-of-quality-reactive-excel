@@ -17,5 +17,10 @@ export const routes: Routes = [
     loadChildren: async () =>
       (await import('./slices/home/routes/routes')).routes,
   },
+  {
+    path: 'expenses-year',
+    loadChildren: async () =>
+      (await import('./slices/expenses/routes/routes')).routes,
+  },
   { path: '**', component: PageNotFoundComponent },
 ];

@@ -10,7 +10,6 @@ import { AsyncPipe } from '@angular/common';
   templateUrl: './field-of-study-signals.component.html',
   styleUrl: './field-of-study-signals.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers:[BooksStore]
 })
 export class FieldOfStudySignalsComponent {
   readonly store = inject(BooksStore);

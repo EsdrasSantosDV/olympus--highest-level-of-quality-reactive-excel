@@ -4,10 +4,84 @@ import {
   OptionCalculator,
   OptionTypeEnum,
 } from '../../../shared/types/interfaces/option-calculator';
+import {
+  ExpensesInTheMonth,
+  ExpenseValue,
+  ModalitiesExpense,
+} from '../../../shared/types/interfaces/month-expenses-in-the-month';
 
 @Injectable({ providedIn: 'root' })
 export class MockDataService {
   constructor() {}
+
+  getRandomInt = (min: number, max: number) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+
+  getRandomName = () => `Expense ${Math.random().toString(36).substring(7)}`;
+
+ 
+  getRandomModalities = (): ModalitiesExpense[] => {
+    const modalities = [
+      { id: 1, name: 'Modality 1', enabled: true },
+      { id: 2, name: 'Modality 2', enabled: false },
+      { id: 3, name: 'Modality 3', enabled: true },
+    ];
+    return modalities.filter(() => Math.random() > 0.5);
+  };
+
+
+  getExpenseValues = (
+    monthId: number,
+    expenseId: number,
+    modalities: ModalitiesExpense[]
+  ): ExpenseValue[] => {
+    return modalities.map(modality => ({
+      id: this.getRandomInt(1, 10000),
+      comments: `Comment ${Math.random().toString(36).substring(7)}`,
+      expenseId: expenseId,
+      date: new Date(2024, monthId - 1, this.getRandomInt(1, 28)),
+      value: this.getRandomInt(100, 1000),
+      modalityId: modality.id,
+    }));
+  };
+
+ 
+  generateMockExpenses = (): ExpensesInTheMonth[] => {
+    const months = [
+      'Janeiro',
+      'Fevereiro',
+      'Março',
+      'Abril',
+      'Maio',
+      'Junho',
+      'Julho',
+      'Agosto',
+      'Setembro',
+      'Outubro',
+      'Novembro',
+      'Dezembro',
+    ];
+
+    return months.map((monthName, index) => ({
+      monthId: index + 1,
+      monthName: monthName,
+      expensesMonth: new Array(this.getRandomInt(1, 5)).fill(null).map(() => {
+        const expenseId = this.getRandomInt(1, 10000);
+        const modalities = this.getRandomModalities();
+        return {
+          expenseId: expenseId,
+          name: this.getRandomName(),
+          modalities: modalities,
+          expensesValues: this.getExpenseValues(
+            index + 1,
+            expenseId,
+            modalities
+          ),
+        };
+      }),
+    }));
+  };
 
   getAllOptions(): Observable<OptionCalculator[]> {
     const mockOptionCalculators: OptionCalculator[] = [
@@ -166,5 +240,9 @@ export class MockDataService {
     ];
 
     return of(mockOptionCalculators).pipe(delay(1000));
+  }
+
+  getExpensesMock(): Observable<ExpensesInTheMonth[]> {
+    return of(this.generateMockExpenses());
   }
 }
