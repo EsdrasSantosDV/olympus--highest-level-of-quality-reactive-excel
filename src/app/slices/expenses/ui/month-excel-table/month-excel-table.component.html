@@ -23,8 +23,7 @@
             </ng-container>
         }
       }
-  
-      <tr mat-header-row *matHeaderRowDef="computedColumns(); sticky: true"></tr>
+      <tr mat-header-row *matHeaderRowDef="computedColumns();"></tr>
       <tr mat-row *matRowDef="let row; columns: computedColumns();"></tr>
     </table>
   </section>
