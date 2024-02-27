@@ -4,7 +4,7 @@ import {
   computed,
   input,
 } from '@angular/core';
-import { ExpensesInTheMonth } from '../../../../shared/types/interfaces/month-expenses-in-the-month';
+import { ExpenseValue, ExpensesInTheMonth } from '../../../../shared/types/interfaces/month-expenses-in-the-month';
 import { MatTableModule } from '@angular/material/table';
 import { getAllDaysOfMonth } from '../../utils/functions/function-return-array-days';
 import { CommonModule } from '@angular/common';
@@ -27,8 +27,20 @@ export class MonthExcelTableComponent {
     columns.push('total');
     return columns;
   });
+  signalMappedValues=computed<Map<string,Map<string,ExpenseValue[]>>>(()=>
+    {
+      const mappedValues:Map<string,Map<string,ExpenseValue[]>>=new Map();
+      const tableValue=this.table().expensesMonth;
 
-  
+
+
+
+
+      return mappedValues;
+    }
+  )
+
+
 
 
 }

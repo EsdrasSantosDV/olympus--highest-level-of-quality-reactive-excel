@@ -1,8 +1,8 @@
 <section class="mat-elevation-z8" tabindex="0">
     <table mat-table [dataSource]="table().expensesMonth">
-  
-     
-    
+
+
+
       @for (item of computedColumns();track $index;let firts = $first ,last =$last) {
         @if(firts){
             <ng-container [matColumnDef]="item">
@@ -29,5 +29,5 @@
   </section>
 
   {{
-    computedColumns() | json
+    table() | json
   }}
