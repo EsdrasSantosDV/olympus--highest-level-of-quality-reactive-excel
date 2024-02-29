@@ -1,8 +1,5 @@
 <section class="mat-elevation-z8" tabindex="0">
     <table mat-table [dataSource]="table().expensesMonth">
-
-
-
       @for (item of computedColumns();track $index;let firts = $first ,last =$last) {
         @if(firts){
             <ng-container [matColumnDef]="item">
@@ -20,12 +17,12 @@
             <ng-container [matColumnDef]="item">
                 <th mat-header-cell *matHeaderCellDef>Dia {{$index}} </th>
                 <td mat-cell *matCellDef="let element">
-                    <app-cel-table [celValue]="10">
-
-                    </app-cel-table>
+                   
                   @for (item of element.modalities; track $index) {
                     <span class="flex flex-col gap-1 justify-between">
-                      0
+                      <app-cel-table [celValue]="10">
+
+                      </app-cel-table>
                     </span>
                   }
 
@@ -38,6 +35,3 @@
     </table>
   </section>
 
-  {{
-    table() | json
-  }}

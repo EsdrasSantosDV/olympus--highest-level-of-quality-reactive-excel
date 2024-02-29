@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CelTableComponent {
-  celValue=input.required<number | null>();
+  celValue=input<number | null>();
 
   isEditing= signal<boolean>(false);
 
