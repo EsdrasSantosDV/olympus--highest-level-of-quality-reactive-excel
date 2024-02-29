@@ -8,14 +8,15 @@ import { ExpensesInTheMonth } from '../../../../shared/types/interfaces/month-ex
 import { MatTableModule } from '@angular/material/table';
 import { getAllDaysOfMonth } from '../../utils/functions/function-return-array-days';
 import { CommonModule } from '@angular/common';
+import { CelTableComponent } from "../cel-table/cel-table.component";
 
 @Component({
-  selector: 'app-month-excel-table',
-  standalone: true,
-  imports: [MatTableModule, CommonModule],
-  templateUrl: './month-excel-table.component.html',
-  styleUrl: './month-excel-table.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-month-excel-table',
+    standalone: true,
+    templateUrl: './month-excel-table.component.html',
+    styleUrl: './month-excel-table.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [MatTableModule, CommonModule, CelTableComponent]
 })
 export class MonthExcelTableComponent {
   table = input.required<ExpensesInTheMonth>();
@@ -28,7 +29,7 @@ export class MonthExcelTableComponent {
     return columns;
   });
 
-  
+
 
 
 }
