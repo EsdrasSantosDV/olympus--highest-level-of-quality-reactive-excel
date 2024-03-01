@@ -35,8 +35,6 @@ export class MonthExcelTableComponent {
 
 
 
-
-
       return mappedValues;
     }
   )
