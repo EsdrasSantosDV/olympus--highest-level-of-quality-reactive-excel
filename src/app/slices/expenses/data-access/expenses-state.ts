@@ -40,41 +40,7 @@ export const ExpensesStore = signalStore(
       const { day, expenseId, idTable, isEdit, modalityId, value, id } =
         editValuePayload;
       if (isEdit) {
-        patchState(store, state => {
-          const { expensesMonth } = state;
-
-        
-          const updatedExpensesMonth = expensesMonth.map(table => {
-            if (table.id === idTable) {
-              
-              const updatedExpenses = table.expensesMonth.map(expense => {
-                if (expense.expenseId === expenseId) {
-                
-                  const updatedValues = expense.expensesValues.map(
-                    expenseValue => {
-                      if (expenseValue.id === id) {
-                      
-                        return { ...expenseValue, value: value }; 
-                      } else {
-                        return expenseValue; 
-                      }
-                    }
-                  );
-
-                  return { ...expense, expensesValues: updatedValues }; 
-                } else {
-                  return expense;
-                }
-              });
-
-              return { ...table, expensesMonth: updatedExpenses }; 
-            } else {
-              return table; 
-            }
-          });
-
-          return { ...state, expensesMonth: updatedExpensesMonth }; 
-        });
+       
       }
     },
   })),
