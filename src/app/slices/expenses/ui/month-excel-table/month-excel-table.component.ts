@@ -24,11 +24,13 @@ import { CelTableComponent } from '../cel-table/cel-table.component';
 export class MonthExcelTableComponent {
   table = input.required<ExpensesInTheMonth>();
   year = input.required<string>();
-  
+
   computedColumns = computed<string[]>(() => {
     let columns: string[] = [];
     columns.push('name');
-    columns.push(...getAllDaysOfMonth(this.year(), this.table().monthId).slice(0,10));
+    columns.push(
+      ...getAllDaysOfMonth(this.year(), this.table().monthId).slice(0, 10)
+    );
     columns.push('total');
     return columns;
   });
@@ -50,32 +52,59 @@ export class MonthExcelTableComponent {
     return mappedValues;
   });
 
-
-  signalTotalValuesByExpense=computed<Map<string, number>>(() => {
+  signalTotalValuesByExpense = computed<Map<string, number>>(() => {
     const mappedValues: Map<string, number> = new Map();
     const tableValue = this.table().expensesMonth;
     tableValue.forEach(expense => {
       const expenseId = `${expense.expenseId}`;
-      const modalities=expense.modalities;
       expense.expensesValues.forEach(expenseValue => {
         const modalityId = `${expenseValue.modalityId}`;
         const keyConcatened = expenseId + '-' + modalityId;
-        let valueAfter=mappedValues.get(keyConcatened) ?? 0;
+        let valueAfter = mappedValues.get(keyConcatened) ?? 0;
         mappedValues.set(keyConcatened, valueAfter + expenseValue.value);
       });
     });
     return mappedValues;
   });
 
+  signalTotalValuesByDay = computed<Map<string, number>>(() => {
+    const mappedValues: Map<string, number> = new Map();
+    const tableValue = this.table().expensesMonth;
+    tableValue.forEach(expense => {
+      expense.expensesValues.forEach(expenseValue => {
+        const dateExpense = `day-${expenseValue.date.getDay()}`;
+        let valueAfter = mappedValues.get(dateExpense) ?? 0;
+        mappedValues.set(dateExpense, valueAfter + expenseValue.value);
+      });
+    });
+    return mappedValues;
+  });
 
+  signalTotalByTable = computed<number>(() => {
+    const sumWithInitial = Array.from(
+      this.signalTotalValuesByDay().values()
+    ).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    return sumWithInitial;
+  });
 
-  getCellValue(elementId: string, modalityId: string, item: string): any {
+  
+
+  getCellValue(
+    elementId: string,
+    modalityId: string,
+    item: string
+  ): number | null {
     const key = `${elementId}-${modalityId}-${item}`;
-    return this.signalMappedValues().get(key)?.value;
+    return this.signalMappedValues().get(key)?.value ?? null;
   }
 
-  getCellTotalValue(elementId: string, modalityId: string): any {
+  getCellTotalByDay(day: string): number {
+    const key = `${day}`;
+    return this.signalTotalValuesByDay().get(key) ?? 0;
+  }
+
+  getCellTotalValue(elementId: string, modalityId: string): number {
     const key = `${elementId}-${modalityId}`;
-    return this.signalTotalValuesByExpense().get(key);
+    return this.signalTotalValuesByExpense().get(key) ?? 0;
   }
 }
