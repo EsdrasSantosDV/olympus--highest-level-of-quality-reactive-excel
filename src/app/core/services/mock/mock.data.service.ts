@@ -38,7 +38,6 @@ export class MockDataService {
   ): ExpenseValue[] => {
     return modalities.map(modality => ({
       id: this.getRandomInt(1, 10000),
-      comments: `Comment ${Math.random().toString(36).substring(7)}`,
       expenseId: expenseId,
       date: new Date(2024, monthId - 1, this.getRandomInt(1, 28)),
       value: this.getRandomInt(100, 1000),
@@ -64,6 +63,7 @@ export class MockDataService {
     ];
 
     return months.map((monthName, index) => ({
+      id:this.getRandomInt(1,1000),
       monthId: index + 1,
       monthName: monthName,
       expensesMonth: new Array(this.getRandomInt(1, 5)).fill(null).map(() => {

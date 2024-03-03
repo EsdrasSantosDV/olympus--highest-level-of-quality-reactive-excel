@@ -1,5 +1,6 @@
 
 export interface ExpensesInTheMonth{
+    id:number;    
     monthId:number;
     monthName:string;
     expensesMonth:Expense[];
@@ -14,10 +15,9 @@ export interface Expense{
 
 export interface ExpenseValue{
     id:number;
-    comments?:string;
     expenseId:number;
     date:Date;
-    value:number;
+    value:number | null;
     modalityId:number;
 }
 

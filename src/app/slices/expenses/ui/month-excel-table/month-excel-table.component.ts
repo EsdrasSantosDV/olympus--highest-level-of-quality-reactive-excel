@@ -1,6 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
+  Output,
   computed,
   input,
 } from '@angular/core';
@@ -12,6 +14,7 @@ import { MatTableModule } from '@angular/material/table';
 import { getAllDaysOfMonth } from '../../utils/functions/function-return-array-days';
 import { CommonModule } from '@angular/common';
 import { CelTableComponent } from '../cel-table/cel-table.component';
+import { EditAndCreateExpenseValue } from '../../../../shared/types/interfaces/edit-and-create-expense-value';
 
 @Component({
   selector: 'app-month-excel-table',
@@ -24,6 +27,8 @@ import { CelTableComponent } from '../cel-table/cel-table.component';
 export class MonthExcelTableComponent {
   table = input.required<ExpensesInTheMonth>();
   year = input.required<string>();
+  @Output() eventChangeExcelValue =
+    new EventEmitter<EditAndCreateExpenseValue>();
 
   computedColumns = computed<string[]>(() => {
     let columns: string[] = [];
@@ -61,7 +66,7 @@ export class MonthExcelTableComponent {
         const modalityId = `${expenseValue.modalityId}`;
         const keyConcatened = expenseId + '-' + modalityId;
         let valueAfter = mappedValues.get(keyConcatened) ?? 0;
-        mappedValues.set(keyConcatened, valueAfter + expenseValue.value);
+        mappedValues.set(keyConcatened, valueAfter + (expenseValue.value ?? 0));
       });
     });
     return mappedValues;
@@ -74,7 +79,7 @@ export class MonthExcelTableComponent {
       expense.expensesValues.forEach(expenseValue => {
         const dateExpense = `day-${expenseValue.date.getDay()}`;
         let valueAfter = mappedValues.get(dateExpense) ?? 0;
-        mappedValues.set(dateExpense, valueAfter + expenseValue.value);
+        mappedValues.set(dateExpense, valueAfter + (expenseValue.value ?? 0));
       });
     });
     return mappedValues;
@@ -86,8 +91,6 @@ export class MonthExcelTableComponent {
     ).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
     return sumWithInitial;
   });
-
-  
 
   getCellValue(
     elementId: string,
@@ -106,5 +109,32 @@ export class MonthExcelTableComponent {
   getCellTotalValue(elementId: string, modalityId: string): number {
     const key = `${elementId}-${modalityId}`;
     return this.signalTotalValuesByExpense().get(key) ?? 0;
+  }
+
+  editValueChange(
+    expenseId: number,
+    modalityId: number,
+    valueChanged: number | null | undefined,
+    date: string
+  ) {
+    const key = `${expenseId}-${modalityId}-${date}`;
+    let editValue: EditAndCreateExpenseValue;
+    if (this.signalMappedValues().has(key)) {
+      const expenseValue = this.signalMappedValues().get(key);
+      if (expenseValue) {
+        editValue = {
+          day: expenseValue.date,
+          expenseId: expenseValue.expenseId,
+          idTable: this.table().id,
+          isEdit: true,
+          modalityId: expenseValue.modalityId,
+          id: expenseValue.id,
+          value: valueChanged ?? null,
+        };
+
+        this.eventChangeExcelValue.emit(editValue);
+      }
+    } else {
+    }
   }
 }

@@ -19,6 +19,7 @@
               <span class="flex flex-col gap-1 justify-between">
                 <app-cel-table
                   [isEditable]="false"
+                
                   [celValue]="
                     getCellTotalValue(element.expenseId, modality.id)
                   ">
@@ -42,6 +43,7 @@
             @for (modality of element.modalities; track $index) {
               <span class="flex flex-col gap-1 justify-between">
                 <app-cel-table
+                (celValueChange)="editValueChange(element.expenseId,modality.id,$event,item)"
                   [celValue]="
                     getCellValue(element.expenseId, modality.id, item)
                   ">
