@@ -13,6 +13,8 @@ import { FormsModule } from '@angular/forms';
 export class CelTableComponent {
   celValue=model<number | null>();
 
+  isEditable=input<boolean>(true);
+
   isEditing= signal<boolean>(false);
 
   toggleEdit(): void {

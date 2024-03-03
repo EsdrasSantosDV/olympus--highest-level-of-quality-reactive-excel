@@ -13,7 +13,14 @@
       } @else if (last) {
         <ng-container [matColumnDef]="item">
           <th mat-header-cell *matHeaderCellDef>Total</th>
-          <td mat-cell *matCellDef="let element"></td>
+          <td mat-cell *matCellDef="let element">
+            @for (modality of element.modalities; track $index) {
+              <span class="flex flex-col gap-1 justify-between">
+                <app-cel-table [isEditable]="false"  [celValue]="getCellTotalValue(element.expenseId, modality.id)">
+                </app-cel-table>
+              </span>
+            }
+          </td>
         </ng-container>
       } @else {
         <ng-container [matColumnDef]="item">
@@ -34,4 +41,4 @@
   </table>
 </section>
 
-{{ signalMappedValues() }}
+

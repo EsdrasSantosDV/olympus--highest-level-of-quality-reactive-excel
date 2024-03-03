@@ -24,13 +24,15 @@ import { CelTableComponent } from '../cel-table/cel-table.component';
 export class MonthExcelTableComponent {
   table = input.required<ExpensesInTheMonth>();
   year = input.required<string>();
+  
   computedColumns = computed<string[]>(() => {
     let columns: string[] = [];
     columns.push('name');
-    columns.push(...getAllDaysOfMonth(this.year(), this.table().monthId));
+    columns.push(...getAllDaysOfMonth(this.year(), this.table().monthId).slice(0,10));
     columns.push('total');
     return columns;
   });
+
   signalMappedValues = computed<Map<string, ExpenseValue>>(() => {
     const mappedValues: Map<string, ExpenseValue> = new Map();
     const tableValue = this.table().expensesMonth;
@@ -40,7 +42,6 @@ export class MonthExcelTableComponent {
         const modalityId = `${expenseValue.modalityId}`;
         const dateExpense = `day-${expenseValue.date.getDay()}`;
         const keyConcatened = expenseId + '-' + modalityId + '-' + dateExpense;
-
         if (!mappedValues.has(keyConcatened)) {
           mappedValues.set(keyConcatened, expenseValue);
         }
@@ -48,8 +49,33 @@ export class MonthExcelTableComponent {
     });
     return mappedValues;
   });
+
+
+  signalTotalValuesByExpense=computed<Map<string, number>>(() => {
+    const mappedValues: Map<string, number> = new Map();
+    const tableValue = this.table().expensesMonth;
+    tableValue.forEach(expense => {
+      const expenseId = `${expense.expenseId}`;
+      const modalities=expense.modalities;
+      expense.expensesValues.forEach(expenseValue => {
+        const modalityId = `${expenseValue.modalityId}`;
+        const keyConcatened = expenseId + '-' + modalityId;
+        let valueAfter=mappedValues.get(keyConcatened) ?? 0;
+        mappedValues.set(keyConcatened, valueAfter + expenseValue.value);
+      });
+    });
+    return mappedValues;
+  });
+
+
+
   getCellValue(elementId: string, modalityId: string, item: string): any {
     const key = `${elementId}-${modalityId}-${item}`;
     return this.signalMappedValues().get(key)?.value;
+  }
+
+  getCellTotalValue(elementId: string, modalityId: string): any {
+    const key = `${elementId}-${modalityId}`;
+    return this.signalTotalValuesByExpense().get(key);
   }
 }
