@@ -40,9 +40,10 @@ export class MonthExcelTableComponent {
     return columns;
   });
 
-  signalMappedValues = computed<Map<string, ExpenseValue>>(() => {
-    const mappedValues: Map<string, ExpenseValue> = new Map();
+  signalMappedValues = computed<Map<string, number | null>>(() => {
+    const mappedValues: Map<string, number | null> = new Map();
     const tableValue = this.table().expensesMonth;
+    
     tableValue.forEach(expense => {
       const expenseId = `${expense.expenseId}`;
       expense.expensesValues.forEach(expenseValue => {
@@ -50,11 +51,15 @@ export class MonthExcelTableComponent {
         const dateExpense = `day-${expenseValue.date.getDay()}`;
         const keyConcatened = expenseId + '-' + modalityId + '-' + dateExpense;
         if (!mappedValues.has(keyConcatened)) {
-          mappedValues.set(keyConcatened, expenseValue);
+          mappedValues.set(keyConcatened, expenseValue.value ?? null);
         }
       });
     });
     return mappedValues;
+  });
+
+  signalArrayValues = computed(() => {
+    return Array.from(this.signalMappedValues().values());
   });
 
   signalTotalValuesByExpense = computed<Map<string, number>>(() => {
@@ -98,7 +103,7 @@ export class MonthExcelTableComponent {
     item: string
   ): number | null {
     const key = `${elementId}-${modalityId}-${item}`;
-    return this.signalMappedValues().get(key)?.value ?? null;
+    return this.signalMappedValues().get(key) ?? null;
   }
 
   getCellTotalByDay(day: string): number {
@@ -118,23 +123,24 @@ export class MonthExcelTableComponent {
     date: string
   ) {
     const key = `${expenseId}-${modalityId}-${date}`;
-    let editValue: EditAndCreateExpenseValue;
-    if (this.signalMappedValues().has(key)) {
-      const expenseValue = this.signalMappedValues().get(key);
-      if (expenseValue) {
-        editValue = {
-          day: expenseValue.date,
-          expenseId: expenseValue.expenseId,
-          idTable: this.table().id,
-          isEdit: true,
-          modalityId: expenseValue.modalityId,
-          id: expenseValue.id,
-          value: valueChanged ?? null,
-        };
+    this.signalMappedValues().set(key, valueChanged ?? null);
+    //let editValue: EditAndCreateExpenseValue;
+    // if (this.signalMappedValues().has(key)) {
+    //   const expenseValue = this.signalMappedValues().get(key);
+    //   if (expenseValue) {
+    //     editValue = {
+    //       day: expenseValue.date,
+    //       expenseId: expenseValue.expenseId,
+    //       idTable: this.table().id,
+    //       isEdit: true,
+    //       modalityId: expenseValue.modalityId,
+    //       id: expenseValue.id,
+    //       value: valueChanged ?? null,
+    //     };
 
-        this.eventChangeExcelValue.emit(editValue);
-      }
-    } else {
-    }
+    //     this.eventChangeExcelValue.emit(editValue);
+    //   }
+    // } else {
+    // }
   }
 }
