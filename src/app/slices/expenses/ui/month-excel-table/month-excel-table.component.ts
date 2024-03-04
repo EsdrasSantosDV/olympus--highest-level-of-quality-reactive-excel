@@ -3,8 +3,10 @@ import {
   Component,
   EventEmitter,
   Output,
+  WritableSignal,
   computed,
   input,
+  signal,
 } from '@angular/core';
 import {
   ExpenseValue,
@@ -15,7 +17,9 @@ import { getAllDaysOfMonth } from '../../utils/functions/function-return-array-d
 import { CommonModule } from '@angular/common';
 import { CelTableComponent } from '../cel-table/cel-table.component';
 import { EditAndCreateExpenseValue } from '../../../../shared/types/interfaces/edit-and-create-expense-value';
-
+import { ExcelValue } from '../../../../shared/types/interfaces/excel-value';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { map, tap } from 'rxjs';
 @Component({
   selector: 'app-month-excel-table',
   standalone: true,
@@ -40,26 +44,41 @@ export class MonthExcelTableComponent {
     return columns;
   });
 
-  signalMappedValues = computed<Map<string, number | null>>(() => {
-    const mappedValues: Map<string, number | null> = new Map();
-    const tableValue = this.table().expensesMonth;
-    
-    tableValue.forEach(expense => {
-      const expenseId = `${expense.expenseId}`;
-      expense.expensesValues.forEach(expenseValue => {
-        const modalityId = `${expenseValue.modalityId}`;
-        const dateExpense = `day-${expenseValue.date.getDay()}`;
-        const keyConcatened = expenseId + '-' + modalityId + '-' + dateExpense;
-        if (!mappedValues.has(keyConcatened)) {
-          mappedValues.set(keyConcatened, expenseValue.value ?? null);
-        }
-      });
-    });
-    return mappedValues;
-  });
+  signalValueWritrable = signal<Map<string, ExcelValue>>(
+    new Map<string, ExcelValue>()
+  );
+
+
+  signalMappedValues = toSignal(
+    toObservable(this.table).pipe(
+      map(value => {
+        const mappedValues: Map<string, ExcelValue> = new Map();
+        const tableValue = this.table().expensesMonth;
+
+        tableValue.forEach(expense => {
+          const expenseId = `${expense.expenseId}`;
+          expense.expensesValues.forEach(expenseValue => {
+            const modalityId = `${expenseValue.modalityId}`;
+            const dateExpense = `day-${expenseValue.date.getDay()}`;
+            const keyConcatened =
+              expenseId + '-' + modalityId + '-' + dateExpense;
+            mappedValues.set(keyConcatened, {
+              value: expenseValue.value,
+              isRealValue: true,
+              id: expenseValue.id,
+            });
+          });
+        });
+        return mappedValues;
+      }),
+      tap(value => {
+        this.signalValueWritrable.set(value);
+      })
+    )
+  );
 
   signalArrayValues = computed(() => {
-    return Array.from(this.signalMappedValues().values());
+    return Array.from(this.signalValueWritrable().values());
   });
 
   signalTotalValuesByExpense = computed<Map<string, number>>(() => {
@@ -103,7 +122,7 @@ export class MonthExcelTableComponent {
     item: string
   ): number | null {
     const key = `${elementId}-${modalityId}-${item}`;
-    return this.signalMappedValues().get(key) ?? null;
+    return this.signalValueWritrable().get(key)?.value ?? null;
   }
 
   getCellTotalByDay(day: string): number {
@@ -123,24 +142,20 @@ export class MonthExcelTableComponent {
     date: string
   ) {
     const key = `${expenseId}-${modalityId}-${date}`;
-    this.signalMappedValues().set(key, valueChanged ?? null);
-    //let editValue: EditAndCreateExpenseValue;
-    // if (this.signalMappedValues().has(key)) {
-    //   const expenseValue = this.signalMappedValues().get(key);
-    //   if (expenseValue) {
-    //     editValue = {
-    //       day: expenseValue.date,
-    //       expenseId: expenseValue.expenseId,
-    //       idTable: this.table().id,
-    //       isEdit: true,
-    //       modalityId: expenseValue.modalityId,
-    //       id: expenseValue.id,
-    //       value: valueChanged ?? null,
-    //     };
-
-    //     this.eventChangeExcelValue.emit(editValue);
-    //   }
-    // } else {
-    // }
+    let valueByKey = this.signalValueWritrable().get(key);
+    if (valueByKey) {
+      valueByKey.value = valueChanged ?? null;
+      this.signalValueWritrable().set(key, valueByKey);
+      const shallowCopyMap = new Map(this.signalValueWritrable().entries());
+      this.signalValueWritrable.set(shallowCopyMap);
+    } else {
+      this.signalValueWritrable().set(key, {
+        value: valueChanged ?? null,
+        isRealValue: false,
+      });
+      const shallowCopyMap = new Map(this.signalValueWritrable().entries());
+      this.signalValueWritrable.set(shallowCopyMap);
+      
+    }
   }
 }

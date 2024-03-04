@@ -1,6 +1,3 @@
 <div class="cel" (click)="toggleEdit()">
   <input  [(ngModel)]="celValue" [disabled]="!isEditable()" (blur)="toggleEdit()" type="number" />
 </div>
-
-
-{{celValue()}}
