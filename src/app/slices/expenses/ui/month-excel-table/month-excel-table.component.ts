@@ -48,31 +48,76 @@ export class MonthExcelTableComponent {
     new Map<string, ExcelValue>()
   );
 
+  signalTotalValuesByDay = signal<Map<string, number>>(
+    new Map<string, number>()
+  );
+
+  signalTotalValuesByExpense = signal<Map<string, number>>(
+    new Map<string, number>()
+  );
 
   signalMappedValues = toSignal(
     toObservable(this.table).pipe(
       map(value => {
         const mappedValues: Map<string, ExcelValue> = new Map();
-        const tableValue = this.table().expensesMonth;
+        const mappedValuesTotalByDay: Map<string, number> = new Map();
+        const mappedValuesTotalByExpenseAndModality: Map<string, number> =
+          new Map();
 
+        const tableValue = this.table().expensesMonth;
         tableValue.forEach(expense => {
           const expenseId = `${expense.expenseId}`;
           expense.expensesValues.forEach(expenseValue => {
             const modalityId = `${expenseValue.modalityId}`;
             const dateExpense = `day-${expenseValue.date.getDay()}`;
-            const keyConcatened =
+            const keyConcatenedTotal =
               expenseId + '-' + modalityId + '-' + dateExpense;
-            mappedValues.set(keyConcatened, {
+
+            const keyConcatenedModality = expenseId + '-' + modalityId;
+
+            mappedValues.set(keyConcatenedTotal, {
               value: expenseValue.value,
               isRealValue: true,
               id: expenseValue.id,
             });
+
+            const valueByDay = mappedValuesTotalByDay.get(dateExpense);
+            const valueByExpenseAndModality =
+              mappedValuesTotalByExpenseAndModality.get(keyConcatenedModality);
+            if (valueByDay) {
+              mappedValuesTotalByDay.set(
+                dateExpense,
+                valueByDay + (expenseValue.value ?? 0)
+              );
+            } else {
+              mappedValuesTotalByDay.set(dateExpense, expenseValue.value ?? 0);
+            }
+
+            if (valueByExpenseAndModality) {
+              mappedValuesTotalByExpenseAndModality.set(
+                keyConcatenedModality,
+                valueByExpenseAndModality + (expenseValue.value ?? 0)
+              );
+            } else {
+              mappedValuesTotalByExpenseAndModality.set(
+                keyConcatenedModality,
+                expenseValue.value ?? 0
+              );
+            }
           });
         });
-        return mappedValues;
+        return {
+          mappedValues,
+          mappedValuesTotalByDay,
+          mappedValuesTotalByExpenseAndModality,
+        };
       }),
       tap(value => {
-        this.signalValueWritrable.set(value);
+        this.signalValueWritrable.set(value.mappedValues);
+        this.signalTotalValuesByDay.set(value.mappedValuesTotalByDay);
+        this.signalTotalValuesByExpense.set(
+          value.mappedValuesTotalByExpenseAndModality
+        );
       })
     )
   );
@@ -81,38 +126,13 @@ export class MonthExcelTableComponent {
     return Array.from(this.signalValueWritrable().values());
   });
 
-  signalTotalValuesByExpense = computed<Map<string, number>>(() => {
-    const mappedValues: Map<string, number> = new Map();
-    const tableValue = this.table().expensesMonth;
-    tableValue.forEach(expense => {
-      const expenseId = `${expense.expenseId}`;
-      expense.expensesValues.forEach(expenseValue => {
-        const modalityId = `${expenseValue.modalityId}`;
-        const keyConcatened = expenseId + '-' + modalityId;
-        let valueAfter = mappedValues.get(keyConcatened) ?? 0;
-        mappedValues.set(keyConcatened, valueAfter + (expenseValue.value ?? 0));
-      });
-    });
-    return mappedValues;
-  });
-
-  signalTotalValuesByDay = computed<Map<string, number>>(() => {
-    const mappedValues: Map<string, number> = new Map();
-    const tableValue = this.table().expensesMonth;
-    tableValue.forEach(expense => {
-      expense.expensesValues.forEach(expenseValue => {
-        const dateExpense = `day-${expenseValue.date.getDay()}`;
-        let valueAfter = mappedValues.get(dateExpense) ?? 0;
-        mappedValues.set(dateExpense, valueAfter + (expenseValue.value ?? 0));
-      });
-    });
-    return mappedValues;
-  });
-
   signalTotalByTable = computed<number>(() => {
     const sumWithInitial = Array.from(
-      this.signalTotalValuesByDay().values()
-    ).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+      this.signalValueWritrable().values()
+    ).reduce(
+      (accumulator, currentValue) => accumulator + (currentValue.value ?? 0),
+      0
+    );
     return sumWithInitial;
   });
 
@@ -142,7 +162,14 @@ export class MonthExcelTableComponent {
     date: string
   ) {
     const key = `${expenseId}-${modalityId}-${date}`;
+
+
     let valueByKey = this.signalValueWritrable().get(key);
+    let valueByDay = this.signalTotalValuesByDay().get(date);
+    let valueByExpense = this.signalTotalValuesByExpense().get(
+      `${expenseId}-${modalityId}`
+    );
+
     if (valueByKey) {
       valueByKey.value = valueChanged ?? null;
       this.signalValueWritrable().set(key, valueByKey);
@@ -155,7 +182,29 @@ export class MonthExcelTableComponent {
       });
       const shallowCopyMap = new Map(this.signalValueWritrable().entries());
       this.signalValueWritrable.set(shallowCopyMap);
-      
+    }
+
+    if (valueByDay) {
+      this.signalTotalValuesByDay().set(date, valueByDay + (valueChanged ?? 0));
+      const shallowCopyMap = new Map(this.signalTotalValuesByDay().entries());
+      this.signalTotalValuesByDay.set(shallowCopyMap);
+    } else {
+      this.signalTotalValuesByDay().set(date, valueChanged ?? 0);
+      const shallowCopyMap = new Map(this.signalTotalValuesByDay().entries());
+      this.signalTotalValuesByDay.set(shallowCopyMap);
+    }
+
+    if (valueByExpense) {
+      this.signalTotalValuesByExpense().set(
+        `${expenseId}-${modalityId}`,
+        valueByExpense + (valueChanged ?? 0)
+      );
+      const shallowCopyMap = new Map(this.signalTotalValuesByExpense().entries());
+      this.signalTotalValuesByExpense.set(shallowCopyMap);
+    } else {
+      this.signalTotalValuesByExpense().set(`${expenseId}-${modalityId}`, valueChanged ?? 0);
+      const shallowCopyMap = new Map(this.signalTotalValuesByExpense().entries());
+      this.signalTotalValuesByExpense.set(shallowCopyMap);
     }
   }
 }
