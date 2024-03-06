@@ -1,3 +1,22 @@
+QUANTIDADE DE VEZES QUE A REFERENCIA MUDOU, OU O VALOR ATUALIZOU
+{{
+  triggerComplete | async
+}}
+<br>
+QUANTIDADE DE VEZES QUE A REFERENCIA DO DIA MUDOU, OU O VALOR ATUALIZOU
+{{
+  triggerDay | async
+}}
+<br>
+QUANTIDADE DE VEZES QUE A REFERENCIA DO EXPENSE MUDOU, OU O VALOR ATUALIZOU
+{{
+  triggerExpense | async
+}}
+<br>
+
+
+
+
 <section class="mat-elevation-z8" tabindex="0">
   <table mat-table [dataSource]="table().expensesMonth">
     @for (
@@ -17,22 +36,25 @@
           <td mat-cell *matCellDef="let element">
             @for (modality of element.modalities; track $index) {
               <span class="flex flex-col gap-1 justify-between">
-                <app-cel-table
+                <!-- <app-cel-table
                   [isEditable]="false"
                 
                   [celValue]="
                     getCellTotalValue(element.expenseId, modality.id)
                   ">
-                </app-cel-table>
+                </app-cel-table> -->
+                
+                0
               </span>
             }
           </td>
           <td mat-footer-cell *matFooterCellDef>
             <span class="flex flex-col gap-1 justify-between">
-              <app-cel-table
+              <!-- <app-cel-table
                 [isEditable]="false"
                 [celValue]="signalTotalByTable()">
-              </app-cel-table>
+              </app-cel-table> -->
+              0
             </span>
           </td>
         </ng-container>
@@ -42,21 +64,32 @@
           <td mat-cell *matCellDef="let element">
             @for (modality of element.modalities; track $index) {
               <span class="flex flex-col gap-1 justify-between">
-                <app-cel-table
+                <!-- <app-cel-table
                 (celValueChange)="editValueChange(element.expenseId,modality.id,$event,item)"
                   [celValue]="
                     getCellValue(element.expenseId, modality.id, item)
                   ">
-                </app-cel-table>
+                </app-cel-table> -->
+                <app-cel-table-model-value 
+                [isEditable]="false"
+                [modelSignal]="signalValueWritrable"
+                [keyMapExpense]="element.expenseId"
+                [keyMapModality]="modality.id"
+                [keyMapDay]="item"
+                >
+
+                </app-cel-table-model-value>
+                0
               </span>
             }
           </td>
           <td mat-footer-cell *matFooterCellDef>
             <span class="flex flex-col gap-1 justify-between">
-              <app-cel-table
+              <!-- <app-cel-table
                 [isEditable]="false"
                 [celValue]="getCellTotalByDay(item)">
-              </app-cel-table>
+              </app-cel-table> -->
+              NÃO FUNFANDO
             </span>
           </td>
         </ng-container>
@@ -68,9 +101,20 @@
   </table>
 </section>
 
+<br>
 
 {{
-  quantasvezes | async| json
+  signalArrayValues() | json
 }}
 
-{{quantasvezesUpdate() | json}}
+<br>
+<br>
+{{
+  signalArrayValuesDayOne() | json
+}}
+
+<br>
+<br>
+{{
+  signalArrayValuesByExpense() | json
+}}
