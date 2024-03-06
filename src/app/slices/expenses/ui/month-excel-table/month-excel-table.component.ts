@@ -124,9 +124,17 @@ export class MonthExcelTableComponent {
     )
   );
 
+
+  signalArrayValuesDayOne = computed(() => {
+    return Array.from(this.signalTotalValuesByDay().values());
+  });
+
   signalArrayValues = computed(() => {
     return Array.from(this.signalValueWritrable().values());
   });
+
+
+
 
   signalTotalByTable = computed<number>(() => {
     const sumWithInitial = Array.from(
@@ -162,6 +170,10 @@ export class MonthExcelTableComponent {
 
   getCellTotalValue(elementId: string, modalityId: string): number {
     const key = `${elementId}-${modalityId}`;
+    console.log(this.signalTotalValuesByExpense()
+    .get(key)
+    );
+    
     return (
       this.signalTotalValuesByExpense()
         .get(key)
