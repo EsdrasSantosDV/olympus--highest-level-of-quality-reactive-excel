@@ -19,7 +19,7 @@ import { CelTableComponent } from '../cel-table/cel-table.component';
 import { EditAndCreateExpenseValue } from '../../../../shared/types/interfaces/edit-and-create-expense-value';
 import { ExcelValue } from '../../../../shared/types/interfaces/excel-value';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { map, tap } from 'rxjs';
+import { BehaviorSubject, map, tap } from 'rxjs';
 @Component({
   selector: 'app-month-excel-table',
   standalone: true,
@@ -29,6 +29,11 @@ import { map, tap } from 'rxjs';
   imports: [MatTableModule, CommonModule, CelTableComponent],
 })
 export class MonthExcelTableComponent {
+
+  quantasvezes=new BehaviorSubject(0);
+
+  quantasvezesUpdate=signal(0);
+
   table = input.required<ExpensesInTheMonth>();
   year = input.required<string>();
   @Output() eventChangeExcelValue =
@@ -152,6 +157,8 @@ export class MonthExcelTableComponent {
     item: string
   ): number | null {
     const key = `${elementId}-${modalityId}-${item}`;
+    const value=this.quantasvezes.getValue();
+    this.quantasvezes.next(value+1);
     return this.signalValueWritrable().get(key)?.value ?? null;
   }
 
@@ -170,9 +177,6 @@ export class MonthExcelTableComponent {
 
   getCellTotalValue(elementId: string, modalityId: string): number {
     const key = `${elementId}-${modalityId}`;
-    console.log(this.signalTotalValuesByExpense()
-    .get(key)
-    );
     
     return (
       this.signalTotalValuesByExpense()
@@ -194,7 +198,8 @@ export class MonthExcelTableComponent {
     const keyConcatened = `${expenseId}-${modalityId}-${date}`;
     const keyConcatenedModality = `${expenseId}-${modalityId}`;
     let valueByKey = this.signalValueWritrable().get(keyConcatened);
-
+    this.quantasvezesUpdate.update((v)=>v+1);
+    
     if (valueByKey) {
       valueByKey.value = valueChanged ?? null;
       this.signalValueWritrable().set(keyConcatened, valueByKey);
