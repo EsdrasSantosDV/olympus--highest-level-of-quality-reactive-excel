@@ -148,36 +148,33 @@ export class MonthExcelTableComponent implements OnInit {
     )
   );
 
+  obsOne$ = toObservable(this.signalValueWritrable).pipe(
+    tap(() => {
+      const value = this.triggerComplete.value;
+      this.triggerComplete.next(value + 1);
+    })
+  );
+
+  obsTwo$ = toObservable(this.signalTotalValuesByDay).pipe(
+    tap(() => {
+      const value = this.triggerDay.value;
+      this.triggerDay.next(value + 1);
+    })
+  );
+
+  obsThree$ = toObservable(this.signalTotalValuesByExpense).pipe(
+    tap(() => {
+      const value = this.triggerExpense.value;
+      this.triggerExpense.next(value + 1);
+    })
+  );
+
   ngOnInit(): void {
-    // toObservable(this.signalValueWritrable)
-    //   .pipe(
-    //     tap(() => {
-    //       const value = this.triggerComplete.value;
-    //       this.triggerComplete.next(value + 1);
-    //     }),
-       
-    //   )
-    //   .subscribe();
+    this.obsOne$.subscribe();
 
-    // toObservable(this.signalTotalValuesByDay)
-    //   .pipe(
-    //     tap(() => {
-    //       const value = this.triggerDay.value;
-    //       this.triggerDay.next(value + 1);
-    //     }),
-     
-    //   )
-    //   .subscribe();
+    this.obsTwo$.subscribe();
 
-    // toObservable(this.signalTotalValuesByExpense)
-    //   .pipe(
-    //     tap(() => {
-    //       const value = this.triggerExpense.value;
-    //       this.triggerExpense.next(value + 1);
-    //     }),
-       
-    //   )
-    //   .subscribe();
+    this.obsThree$.subscribe();
   }
 
   signalArrayValues = computed(() => {

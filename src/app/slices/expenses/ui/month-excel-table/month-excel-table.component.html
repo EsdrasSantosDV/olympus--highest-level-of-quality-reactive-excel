@@ -70,9 +70,11 @@ QUANTIDADE DE VEZES QUE A REFERENCIA DO EXPENSE MUDOU, OU O VALOR ATUALIZOU
                     getCellValue(element.expenseId, modality.id, item)
                   ">
                 </app-cel-table> -->
+                <!-- ACEFALO MENTAL LEMBRA DA BANANAAAAA TWO WAY DATA BINDING
+                 -->
                 <app-cel-table-model-value 
                 [isEditable]="true"
-                [modelSignal]="signalValueWritrable()"
+                [(modelSignal)]="signalValueWritrable"
                 [keyMapExpense]="element.expenseId"
                 [keyMapModality]="modality.id"
                 [keyMapDay]="item"
