@@ -71,15 +71,15 @@ QUANTIDADE DE VEZES QUE A REFERENCIA DO EXPENSE MUDOU, OU O VALOR ATUALIZOU
                   ">
                 </app-cel-table> -->
                 <app-cel-table-model-value 
-                [isEditable]="false"
-                [modelSignal]="signalValueWritrable"
+                [isEditable]="true"
+                [modelSignal]="signalValueWritrable()"
                 [keyMapExpense]="element.expenseId"
                 [keyMapModality]="modality.id"
                 [keyMapDay]="item"
                 >
 
                 </app-cel-table-model-value>
-                0
+                
               </span>
             }
           </td>
