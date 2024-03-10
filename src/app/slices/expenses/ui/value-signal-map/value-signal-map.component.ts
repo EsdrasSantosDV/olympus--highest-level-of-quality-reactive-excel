@@ -12,7 +12,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { ExcelValue } from '../../../../shared/types/interfaces/excel-value';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { EMPTY, combineLatest, map, skip, tap, withLatestFrom } from 'rxjs';
+import { EMPTY, combineLatest, map, pairwise, skip, tap, withLatestFrom } from 'rxjs';
 import { concatLatestFrom } from '@ngrx/operators';
 
 @Component({
@@ -28,6 +28,8 @@ export class ValueSignalMapComponent {
 
   modelSignal = model.required<Map<string, WritableSignal<ExcelValue>>>();
 
+  modelSignalDay = model.required<Map<string, WritableSignal<number>>>();
+
   isEditable = input<boolean>(true);
 
   isEditing = signal<boolean>(false);
@@ -36,10 +38,14 @@ export class ValueSignalMapComponent {
 
   keyMapModality = input.required();
 
-  keyMapDay = input.required();
+  keyMapDay = input.required<string>();
 
   keyMapConcatened = computed(
     () => `${this.keyMapExpense()}-${this.keyMapModality()}-${this.keyMapDay()}`
+  );
+
+  keyMapDayConcatened = computed(
+    () => `${this.keyMapExpense()}-${this.keyMapDay()}`
   );
 
   valueComputed = computed(() => {
@@ -52,6 +58,16 @@ export class ValueSignalMapComponent {
         isRealValue: false,
         value: null,
       });
+    }
+  });
+
+  valueDayComputed = computed(() => {
+    if (this.modelSignalDay().has(this.keyMapDay())) {
+      return this.modelSignalDay().get(
+        this.keyMapDay()
+      ) as WritableSignal<number>;
+    } else {
+      return signal<number>(0);
     }
   });
 
@@ -76,6 +92,25 @@ export class ValueSignalMapComponent {
     )
   );
 
+
+  // effectRxjsNotRealValueDay = toSignal(
+  //   combineLatest(
+  //     toObservable(this.modelSignalDay),
+  //     toObservable(this.keyMapDayConcatened)
+  //   ).pipe(
+  //     tap(([model, key]) => {
+  //       if (!model.has(key)) {
+  //         const signalNew = signal<number>(0);
+  //         model.set(key, signalNew);
+  //         const mappedValues: Map<string, WritableSignal<number>> = new Map(
+  //           model.entries()
+  //         );
+          
+  //       }
+  //     })
+  //   )
+  // );
+
   effectRxjsInitialValue = toSignal(
     toObservable(this.valueComputed).pipe(
       tap(value => this.celValue.set(value().value))
@@ -84,14 +119,32 @@ export class ValueSignalMapComponent {
 
   effectRxjsInitialValueChangeValue = toSignal(
     toObservable(this.celValue).pipe(
+      pairwise(),
       tap(value =>
-        this.valueComputed().update(vxa => {
-          return {
-            value: value,
-            isRealValue: vxa.isRealValue,
-            id: vxa.id,
-          };
-        })
+        {
+          const valueAnterior=value[0] ?? 0;
+          const valueAgora=value[1] ?? 0;
+          let valueReal=0;
+          if(valueAnterior >=valueAgora){
+            valueReal=valueAnterior-valueAgora;
+          }
+          else{
+            valueReal=valueAnterior+valueAgora;
+          }
+
+          this.valueComputed().update(vxa => {
+            return {
+              value: value[1],
+              isRealValue: vxa.isRealValue,
+              id: vxa.id,
+            };
+          })  
+          this.valueDayComputed().update(vxd=>vxd + (valueReal ?? 0));
+
+        
+        }
+       
+        
       )
     )
   );

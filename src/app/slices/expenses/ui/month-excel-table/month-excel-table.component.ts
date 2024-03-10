@@ -49,6 +49,14 @@ export class MonthExcelTableComponent {
     Map<string, WritableSignal<ExcelValue>>
   >(new Map<string, WritableSignal<ExcelValue>>());
 
+  signalWritrableMapExcelValuesDay = signal<
+    Map<string, WritableSignal<number>>
+  >(new Map<string, WritableSignal<number>>());
+
+  signalWritrableMapExcelValuesExpense = signal<
+    Map<string, WritableSignal<ExcelValue>>
+  >(new Map<string, WritableSignal<ExcelValue>>());
+
   injectDestroy = inject(DestroyRef);
 
   table = input.required<ExpensesInTheMonth>();
@@ -66,11 +74,42 @@ export class MonthExcelTableComponent {
     return columns;
   });
 
+  daysConcatened = computed(() => {
+    let dates: string[] = [];
+    dates.push(
+      ...getAllDaysOfMonth(this.year(), this.table().monthId).slice(0, 10)
+    );
+    return dates;
+  });
+
+  expensesIds = computed(() =>
+    this.table().expensesMonth.map(expense => expense.expenseId.toString())
+  );
+
+  
+  effectRxjsInitialTotals = toSignal(
+    toObservable(this.daysConcatened).pipe(
+      map(value => {
+        const mappedValuesDay: Map<string, WritableSignal<number>> = new Map();
+        value.forEach(key => {
+          const signalValuesDay = signal<number>(0);
+          mappedValuesDay.set(key, signalValuesDay);
+        });
+        return mappedValuesDay;
+      }),
+      tap(value => this.signalWritrableMapExcelValuesDay.set(value))
+    )
+  );
+
   effectRxjsExpenseInArray = toSignal(
     toObservable(this.table).pipe(
       map(value => {
         const mappedValues: Map<string, WritableSignal<ExcelValue>> = new Map();
+
+        const mappedValuesDay: Map<string, WritableSignal<number>> = new Map();
+
         const tableValue = this.table().expensesMonth;
+
         tableValue.forEach(expense => {
           const expenseId = `${expense.expenseId}`;
           expense.expensesValues.forEach(expenseValue => {
@@ -78,20 +117,29 @@ export class MonthExcelTableComponent {
             const dateExpense = `day-${expenseValue.date.getDay()}`;
             const keyConcatenedTotal =
               expenseId + '-' + modalityId + '-' + dateExpense;
-
-            const value = {
+            const keyDayAndExpense = expenseId + '-' + dateExpense;
+            const value: ExcelValue = {
               value: expenseValue.value,
               isRealValue: true,
               id: expenseValue.id,
             };
             const signalReference = signal<ExcelValue>(value);
             mappedValues.set(keyConcatenedTotal, signalReference);
+
+            const signalDay = mappedValuesDay.get(
+              dateExpense
+            ) as WritableSignal<number>;
+
+            signalDay.update(
+              valueSignalDay => valueSignalDay + (value.value ?? 0)
+            );
           });
         });
-        return { mappedValues };
+        return { mappedValues, mappedValuesDay };
       }),
       tap(value => {
         this.signalWritrableMapExcelValues.set(value.mappedValues);
+       
       }),
       map(v => EMPTY)
     )
@@ -106,9 +154,22 @@ export class MonthExcelTableComponent {
     return array;
   });
 
+  computedDaysSignal = computed(() => {
+    const valueChanged = this.signalWritrableMapExcelValuesDay();
+    const mappedValuesDay: Map<string, number> = new Map();
+    for (let [key, value] of valueChanged.entries()) {
+      mappedValuesDay.set(key, value());
+    }
+
+    return Array.from(mappedValuesDay.values());
+  });
+
   constructor() {
-    effect(() =>
-      console.log('VALOR DO ARRAY TOTAL', this.signalWritrableMapExcelValues())
-    );
+    // effect(() =>
+    //   console.log(
+    //     'VALOR DO ARRAY TOTAL',
+    //     this.signalWritrableMapExcelValuesDay()
+    //   )
+    // );
   }
 }

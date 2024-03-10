@@ -68,6 +68,7 @@
                 <app-value-signal-map
                 [isEditable]="true"
                 [(modelSignal)]="signalWritrableMapExcelValues"
+                [(modelSignalDay)]="signalWritrableMapExcelValuesDay"
                 [keyMapExpense]="element.expenseId"
                 [keyMapModality]="modality.id"
                 [keyMapDay]="item"
@@ -100,6 +101,11 @@
 
 <br>
 
-{{
+<!-- {{
   computedlogging() | json
+}} -->
+
+<br>
+{{
+  computedDaysSignal() | json
 }}
