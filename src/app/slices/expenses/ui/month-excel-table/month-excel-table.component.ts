@@ -48,6 +48,9 @@ export class MonthExcelTableComponent implements OnInit {
   triggerComplete = new BehaviorSubject(0);
   triggerDay = new BehaviorSubject(0);
   triggerExpense = new BehaviorSubject(0);
+  teste = signal<Map<string, WritableSignal<number | null>>>(
+    new Map<string, WritableSignal<number | null>>()
+  );
 
   injectDestroy = inject(DestroyRef);
 

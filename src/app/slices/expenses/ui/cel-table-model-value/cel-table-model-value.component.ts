@@ -18,12 +18,12 @@ import { skip, tap } from 'rxjs';
   imports: [CommonModule, FormsModule],
   templateUrl: './cel-table-model-value.component.html',
   styleUrl: './cel-table-model-value.component.scss',
-  changeDetection:ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CelTableModelValueComponent {
   celValue = model<number | null>(null);
 
-  modelSignal = model.required<Map<string,ExcelValue>>();
+  modelSignal = model.required<Map<string, ExcelValue>>();
 
   isEditable = input<boolean>(true);
 
@@ -47,6 +47,8 @@ export class CelTableModelValueComponent {
     () => this.modelSignal().get(this.keyMapConcatened())?.isRealValue ?? false
   );
 
+  idValue = computed(() => this.modelSignal().get(this.keyMapConcatened())?.id);
+
   signalArrayValues = computed(() => {
     return Array.from(this.modelSignal().keys());
   });
@@ -57,35 +59,28 @@ export class CelTableModelValueComponent {
     )
   );
 
-  constructor()
-  {
-    // effect(()=>console.log(this.celValue)
+  constructor() {
+    // effect(()=>console.log(this.celValue())
     // )
   }
-
-
-
 
   valueSignalChanged = toSignal(
     toObservable(this.celValue).pipe(
       skip(1),
       tap(valueChanged => {
-      
-        
-        if (this.isRealValue()) {
-          //console.log('valor real');
-        } else {
-        
-          
-          this.modelSignal.update(v => {
-            const shallowCopyMapTotal = new Map(v.entries());
-            shallowCopyMapTotal.set(this.keyMapConcatened(), {
-              value: valueChanged,
-              isRealValue: this.isRealValue(),
-            });
-            return shallowCopyMapTotal;
+        this.modelSignal.update(v => {
+          const shallowCopyMapTotal = new Map(v.entries());
+          shallowCopyMapTotal.set(this.keyMapConcatened(), {
+            value: valueChanged,
+            isRealValue: this.isRealValue(),
+            id: this.idValue(),
           });
-        }
+          return shallowCopyMapTotal;
+        });
+
+        
+
+
       })
     )
   );
