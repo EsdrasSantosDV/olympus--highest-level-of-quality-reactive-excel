@@ -7,6 +7,7 @@ import {
   Output,
   WritableSignal,
   computed,
+  effect,
   inject,
   input,
   signal,
@@ -26,8 +27,9 @@ import {
   toObservable,
   toSignal,
 } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, map, tap } from 'rxjs';
+import { BehaviorSubject, EMPTY, map, tap } from 'rxjs';
 import { CelTableModelValueComponent } from '../cel-table-model-value/cel-table-model-value.component';
+import { ValueSignalMapComponent } from '../value-signal-map/value-signal-map.component';
 @Component({
   selector: 'app-month-excel-table',
   standalone: true,
@@ -39,18 +41,13 @@ import { CelTableModelValueComponent } from '../cel-table-model-value/cel-table-
     CommonModule,
     CelTableComponent,
     CelTableModelValueComponent,
+    ValueSignalMapComponent,
   ],
 })
-export class MonthExcelTableComponent implements OnInit {
-  /*
-  TRIGGERS
-  */
-  triggerComplete = new BehaviorSubject(0);
-  triggerDay = new BehaviorSubject(0);
-  triggerExpense = new BehaviorSubject(0);
-  teste = signal<Map<string, WritableSignal<number | null>>>(
-    new Map<string, WritableSignal<number | null>>()
-  );
+export class MonthExcelTableComponent {
+  signalWritrableMapExcelValues = signal<
+    Map<string, WritableSignal<ExcelValue>>
+  >(new Map<string, WritableSignal<ExcelValue>>());
 
   injectDestroy = inject(DestroyRef);
 
@@ -69,26 +66,10 @@ export class MonthExcelTableComponent implements OnInit {
     return columns;
   });
 
-  signalValueWritrable = signal<Map<string, ExcelValue>>(
-    new Map<string, ExcelValue>()
-  );
-
-  signalTotalValuesByDay = signal<Map<string, ExcelValue[]>>(
-    new Map<string, ExcelValue[]>()
-  );
-
-  signalTotalValuesByExpense = signal<Map<string, ExcelValue[]>>(
-    new Map<string, ExcelValue[]>()
-  );
-
-  signalMappedValues = toSignal(
+  effectRxjsExpenseInArray = toSignal(
     toObservable(this.table).pipe(
       map(value => {
-        const mappedValues: Map<string, ExcelValue> = new Map();
-        const mappedValuesTotalByDay: Map<string, ExcelValue[]> = new Map();
-        const mappedValuesTotalByExpenseAndModality: Map<string, ExcelValue[]> =
-          new Map();
-
+        const mappedValues: Map<string, WritableSignal<ExcelValue>> = new Map();
         const tableValue = this.table().expensesMonth;
         tableValue.forEach(expense => {
           const expenseId = `${expense.expenseId}`;
@@ -98,215 +79,36 @@ export class MonthExcelTableComponent implements OnInit {
             const keyConcatenedTotal =
               expenseId + '-' + modalityId + '-' + dateExpense;
 
-            const keyConcatenedModality = expenseId + '-' + modalityId;
             const value = {
               value: expenseValue.value,
               isRealValue: true,
               id: expenseValue.id,
             };
-            mappedValues.set(keyConcatenedTotal, value);
-
-            if (mappedValuesTotalByDay.has(dateExpense)) {
-              const arrayValues = mappedValuesTotalByDay.get(dateExpense) ?? [];
-              arrayValues.push(value);
-              mappedValuesTotalByDay.set(dateExpense, arrayValues);
-            } else {
-              mappedValuesTotalByDay.set(dateExpense, [value]);
-            }
-
-            if (
-              mappedValuesTotalByExpenseAndModality.has(keyConcatenedModality)
-            ) {
-              const arrayValues =
-                mappedValuesTotalByExpenseAndModality.get(
-                  keyConcatenedModality
-                ) ?? [];
-              arrayValues.push(value);
-              mappedValuesTotalByExpenseAndModality.set(
-                keyConcatenedModality,
-                arrayValues
-              );
-            } else {
-              mappedValuesTotalByExpenseAndModality.set(keyConcatenedModality, [
-                value,
-              ]);
-            }
+            const signalReference = signal<ExcelValue>(value);
+            mappedValues.set(keyConcatenedTotal, signalReference);
           });
         });
-        return {
-          mappedValues,
-          mappedValuesTotalByDay,
-          mappedValuesTotalByExpenseAndModality,
-        };
+        return { mappedValues };
       }),
       tap(value => {
-        console.log('primeira');
-
-        this.signalValueWritrable.set(value.mappedValues);
-        this.signalTotalValuesByDay.set(value.mappedValuesTotalByDay);
-        this.signalTotalValuesByExpense.set(
-          value.mappedValuesTotalByExpenseAndModality
-        );
-      })
+        this.signalWritrableMapExcelValues.set(value.mappedValues);
+      }),
+      map(v => EMPTY)
     )
   );
 
-  obsOne$ = toObservable(this.signalValueWritrable).pipe(
-    tap(() => {
-      const value = this.triggerComplete.value;
-      this.triggerComplete.next(value + 1);
-    })
-  );
+  computedlogging = computed(() => {
+    const valueChanged = this.signalWritrableMapExcelValues();
+    const array: ExcelValue[] = [];
+    for (const valor of valueChanged.values()) {
+      array.push(valor());
+    }
+    return array;
+  });
 
-  obsTwo$ = toObservable(this.signalTotalValuesByDay).pipe(
-    tap(() => {
-      const value = this.triggerDay.value;
-      this.triggerDay.next(value + 1);
-    })
-  );
-
-  obsThree$ = toObservable(this.signalTotalValuesByExpense).pipe(
-    tap(() => {
-      const value = this.triggerExpense.value;
-      this.triggerExpense.next(value + 1);
-    })
-  );
-
-  ngOnInit(): void {
-    this.obsOne$.subscribe();
-
-    this.obsTwo$.subscribe();
-
-    this.obsThree$.subscribe();
+  constructor() {
+    effect(() =>
+      console.log('VALOR DO ARRAY TOTAL', this.signalWritrableMapExcelValues())
+    );
   }
-
-  signalArrayValues = computed(() => {
-    return Array.from(this.signalValueWritrable().values());
-  });
-
-  signalArrayValuesDayOne = computed(() => {
-    return Array.from(this.signalTotalValuesByDay().values());
-  });
-
-  signalArrayValuesByExpense = computed(() => {
-    return Array.from(this.signalTotalValuesByExpense().values());
-  });
-
-  // signalTotalByTable = computed<number>(() => {
-  //   const sumWithInitial = Array.from(
-  //     this.signalValueWritrable().values()
-  //   ).reduce(
-  //     (accumulator, currentValue) => accumulator + (currentValue.value ?? 0),
-  //     0
-  //   );
-  //   return sumWithInitial;
-  // });
-
-  // getCellValue(
-  //   elementId: string,
-  //   modalityId: string,
-  //   item: string
-  // ): number | null {
-  //   const key = `${elementId}-${modalityId}-${item}`;
-  //   const value=this.quantasvezes.getValue();
-  //   this.quantasvezes.next(value+1);
-  //   return this.signalValueWritrable().get(key)?.value ?? null;
-  // }
-
-  // getCellTotalByDay(day: string): number {
-  //   const key = `${day}`;
-  //   return (
-  //     this.signalTotalValuesByDay()
-  //       .get(key)
-  //       ?.reduce(
-  //         (accumulator, currentValue) =>
-  //           accumulator + (currentValue.value ?? 0),
-  //         0
-  //       ) ?? 0
-  //   );
-  // }
-
-  // getCellTotalValue(elementId: string, modalityId: string): number {
-  //   const key = `${elementId}-${modalityId}`;
-
-  //   return (
-  //     this.signalTotalValuesByExpense()
-  //       .get(key)
-  //       ?.reduce(
-  //         (accumulator, currentValue) =>
-  //           accumulator + (currentValue.value ?? 0),
-  //         0
-  //       ) ?? 0
-  //   );
-  // }
-
-  // editValueChange(
-  //   expenseId: number,
-  //   modalityId: number,
-  //   valueChanged: number | null | undefined,
-  //   date: string
-  // ) {
-  //   const keyConcatened = `${expenseId}-${modalityId}-${date}`;
-  //   const keyConcatenedModality = `${expenseId}-${modalityId}`;
-  //   let valueByKey = this.signalValueWritrable().get(keyConcatened);
-  //   this.quantasvezesUpdate.update((v)=>v+1);
-
-  //   if (valueByKey) {
-  //     valueByKey.value = valueChanged ?? null;
-  //     this.signalValueWritrable().set(keyConcatened, valueByKey);
-  //     const shallowCopyMap = new Map(this.signalValueWritrable().entries());
-  //     this.signalValueWritrable.set(shallowCopyMap);
-
-  //     const arrayValues =
-  //       this.signalTotalValuesByExpense().get(keyConcatenedModality) ?? [];
-  //     const index = arrayValues.findIndex(value => value.id === valueByKey?.id);
-  //     arrayValues[index] = valueByKey;
-  //     this.signalTotalValuesByExpense().set(keyConcatenedModality, arrayValues);
-  //     const shallowCopyMapTotal = new Map(
-  //       this.signalTotalValuesByExpense().entries()
-  //     );
-  //     this.signalTotalValuesByExpense.set(shallowCopyMapTotal);
-
-  //     const arrayValuesDay = this.signalTotalValuesByDay().get(date) ?? [];
-  //     const indexDay = arrayValuesDay.findIndex(
-  //       value => value.id === valueByKey?.id
-  //     );
-  //     arrayValuesDay[indexDay] = valueByKey;
-  //     this.signalTotalValuesByDay().set(date, arrayValuesDay);
-  //     const shallowCopyMapDay = new Map(
-  //       this.signalTotalValuesByDay().entries()
-  //     );
-  //     this.signalTotalValuesByDay.set(shallowCopyMapDay);
-  //   } else {
-  //     this.signalValueWritrable().set(keyConcatened, {
-  //       value: valueChanged ?? null,
-  //       isRealValue: false,
-  //     });
-  //     const shallowCopyMap = new Map(this.signalValueWritrable().entries());
-  //     this.signalValueWritrable.set(shallowCopyMap);
-
-  //     const arrayValues =
-  //       this.signalTotalValuesByExpense().get(keyConcatenedModality) ?? [];
-  //     arrayValues.push({
-  //       value: valueChanged ?? null,
-  //       isRealValue: false,
-  //     });
-  //     this.signalTotalValuesByExpense().set(keyConcatenedModality, arrayValues);
-  //     const shallowCopyMapTotal = new Map(
-  //       this.signalTotalValuesByExpense().entries()
-  //     );
-  //     this.signalTotalValuesByExpense.set(shallowCopyMapTotal);
-
-  //     const arrayValuesDay = this.signalTotalValuesByDay().get(date) ?? [];
-  //     arrayValuesDay.push({
-  //       value: valueChanged ?? null,
-  //       isRealValue: false,
-  //     });
-  //     this.signalTotalValuesByDay().set(date, arrayValuesDay);
-  //     const shallowCopyMapDay = new Map(
-  //       this.signalTotalValuesByDay().entries()
-  //     );
-  //     this.signalTotalValuesByDay.set(shallowCopyMapDay);
-  //   }
-  // }
 }

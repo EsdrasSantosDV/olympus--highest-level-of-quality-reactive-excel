@@ -1,18 +1,3 @@
-QUANTIDADE DE VEZES QUE A REFERENCIA MUDOU, OU O VALOR ATUALIZOU
-{{
-  triggerComplete | async
-}}
-<br>
-QUANTIDADE DE VEZES QUE A REFERENCIA DO DIA MUDOU, OU O VALOR ATUALIZOU
-{{
-  triggerDay | async
-}}
-<br>
-QUANTIDADE DE VEZES QUE A REFERENCIA DO EXPENSE MUDOU, OU O VALOR ATUALIZOU
-{{
-  triggerExpense | async
-}}
-<br>
 
 
 
@@ -72,15 +57,25 @@ QUANTIDADE DE VEZES QUE A REFERENCIA DO EXPENSE MUDOU, OU O VALOR ATUALIZOU
                 </app-cel-table> -->
                 <!-- ACEFALO MENTAL LEMBRA DA BANANAAAAA TWO WAY DATA BINDING
                  -->
-                <app-cel-table-model-value 
+                <!-- <app-cel-table-model-value 
                 [isEditable]="true"
                 [(modelSignal)]="signalValueWritrable"
                 [keyMapExpense]="element.expenseId"
                 [keyMapModality]="modality.id"
                 [keyMapDay]="item"
-                >
+                > -->
 
-                </app-cel-table-model-value>
+                <app-value-signal-map
+                [isEditable]="true"
+                [(modelSignal)]="signalWritrableMapExcelValues"
+                [keyMapExpense]="element.expenseId"
+                [keyMapModality]="modality.id"
+                [keyMapDay]="item"
+                />
+
+              
+
+               
                 
               </span>
             }
@@ -106,18 +101,5 @@ QUANTIDADE DE VEZES QUE A REFERENCIA DO EXPENSE MUDOU, OU O VALOR ATUALIZOU
 <br>
 
 {{
-  signalArrayValues() | json
+  computedlogging() | json
 }}
-
-<br>
-<br>
-{{
-  signalArrayValuesDayOne() | json
-}}
-
-<br>
-<br>
-{{
-  signalArrayValuesByExpense() | json
-}}
-

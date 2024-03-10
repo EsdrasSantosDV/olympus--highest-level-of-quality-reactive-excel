@@ -77,10 +77,6 @@ export class CelTableModelValueComponent {
           });
           return shallowCopyMapTotal;
         });
-
-        
-
-
       })
     )
   );
