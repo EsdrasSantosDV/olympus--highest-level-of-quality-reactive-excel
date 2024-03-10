@@ -60,7 +60,7 @@ export class ValueSignalMapComponent {
       toObservable(this.modelSignal),
       toObservable(this.keyMapConcatened)
     ).pipe(
-      map(([model, key]) => {
+      tap(([model, key]) => {
         if (!model.has(key)) {
           const signalNew = signal<ExcelValue>({
             isRealValue: false,
@@ -72,7 +72,6 @@ export class ValueSignalMapComponent {
           );
           this.modelSignal.set(mappedValues);
         }
-        return EMPTY;
       })
     )
   );
