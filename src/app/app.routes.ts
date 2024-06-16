@@ -22,5 +22,10 @@ export const routes: Routes = [
     loadChildren: async () =>
       (await import('./slices/expenses/routes/routes')).routes,
   },
+  {
+    path: 'forms-study',
+    loadChildren: async () =>
+      (await import('./slices/forms-study/routes/routes')).routes,
+  },
   { path: '**', component: PageNotFoundComponent },
 ];

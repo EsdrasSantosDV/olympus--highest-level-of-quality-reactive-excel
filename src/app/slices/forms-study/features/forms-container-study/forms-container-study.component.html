@@ -1,0 +1,60 @@
+<ng-container>
+  <div class="container mx-auto p-4">
+    <mat-card class="shadow-lg">
+      <mat-card-content>
+        <section class="student mb-4">
+          <h2 class="text-2xl font-bold mb-2">Cadastro</h2>
+        </section>
+        {{ formGroup.value | json }}
+        {{ formGroup.valid | json }}
+        <form
+          class="register-form flex flex-col gap-7"
+          [formGroup]="formGroup"
+          (ngSubmit)="saveData()">
+          <section>
+            <mat-form-field appearance="fill" class="w-full mb-4">
+              <mat-label>Nome Completo</mat-label>
+              <input matInput formControlName="fullName" required />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="w-full mb-4">
+              <mat-label>Email</mat-label>
+              <input matInput type="email" formControlName="email" required />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="w-full mb-4">
+              <mat-label>Data de Nascimento</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                formControlName="birthDate"
+                required />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="w-full mb-4">
+              <mat-label>Telefone</mat-label>
+              <input
+                matInput
+                type="tel"
+                formControlName="phoneNumber"
+                required />
+            </mat-form-field>
+          </section>
+
+          <app-form-adress controlKey="adressForm"></app-form-adress>
+
+          <app-form-family controlKey="familyForm"></app-form-family>
+
+
+          <button mat-raised-button color="primary" class="self-center">
+            Submit
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</ng-container>

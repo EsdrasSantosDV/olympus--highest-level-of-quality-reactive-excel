@@ -1,0 +1,25 @@
+<fieldset [formGroupName]="controlKey">
+  <section>
+    <h3 class="text-xl font-semibold mb-2">Dados de Endereço</h3>
+
+    <mat-form-field appearance="fill" class="w-full mb-4">
+      <mat-label>Endereço</mat-label>
+      <input matInput formControlName="address" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full mb-4">
+      <mat-label>Cidade</mat-label>
+      <input matInput formControlName="city" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full mb-4">
+      <mat-label>Estado</mat-label>
+      <input matInput formControlName="state" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full mb-4">
+      <mat-label>CEP</mat-label>
+      <input matInput formControlName="zipCode" required />
+    </mat-form-field>
+  </section>
+</fieldset>

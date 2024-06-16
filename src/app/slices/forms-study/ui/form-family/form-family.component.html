@@ -1,0 +1,20 @@
+<fieldset [formGroupName]="controlKey">
+  <section>
+    <h3 class="text-xl font-semibold mb-2">Dados da Família</h3>
+
+    <mat-form-field appearance="fill" class="w-full mb-4">
+      <mat-label>Nome da Família</mat-label>
+      <input matInput formControlName="familyName" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full mb-4">
+      <mat-label>Número de Membros</mat-label>
+      <input matInput type="number" formControlName="numberOfMembers" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full mb-4">
+      <mat-label>Contato Principal</mat-label>
+      <input matInput type="email" formControlName="primaryContact" required />
+    </mat-form-field>
+  </section>
+</fieldset>
