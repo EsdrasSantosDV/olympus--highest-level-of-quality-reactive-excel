@@ -1,0 +1,6 @@
+<div class="accordion-header" (click)="toggle()">
+  <ng-content select="[accordion-title]"></ng-content>
+</div>
+<div class="accordion-content" [ngClass]="{'open':isOpenSIG()}">
+  <ng-content select="[accordion-content]"></ng-content>
+</div>

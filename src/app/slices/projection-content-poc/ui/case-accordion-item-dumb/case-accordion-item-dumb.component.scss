@@ -1,0 +1,28 @@
+/* Estilização básica para o acordeão */
+.accordion-header {
+  padding: 10px 15px;
+  background-color: #007BFF; /* Cor de fundo azul */
+  color: white; /* Texto branco */
+  cursor: pointer; /* Muda o cursor para indicar que é clicável */
+  border: none; /* Sem bordas */
+  outline: none; /* Remove o foco ao clicar */
+  transition: background-color 0.3s; /* Transição suave de cor de fundo */
+  font-size: 16px; /* Tamanho do texto */
+  border-radius: 5px; /* Borda arredondada */
+}
+
+/* Estilização do conteúdo do acordeão */
+.accordion-content {
+  padding: 15px;
+  border: 1px solid #007BFF; /* Borda azul para corresponder ao cabeçalho */
+  border-top: none; /* Remove a borda superior */
+  display: none; /* Escondido por padrão */
+  font-size: 14px; /* Tamanho de texto menor que o cabeçalho */
+  background-color: #f8f9fa; /* Cor de fundo clara */
+  border-radius: 0 0 5px 5px; /* Arredonda apenas as bordas inferiores */
+}
+
+/* Estilização para quando o acordeão está aberto */
+.accordion-content.open {
+  display: block; /* Mostra o conteúdo quando aberto */
+}

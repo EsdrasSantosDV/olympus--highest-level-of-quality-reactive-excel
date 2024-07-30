@@ -1,0 +1,28 @@
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+
+  justify-content: center;
+  padding: 20px;
+  gap: 1rem;
+}
+
+
+.accordion-header {
+  padding: 10px;
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+.accordion-content {
+  display: none;
+  padding: 10px;
+}
+.accordion-content.open {
+  display: block;
+}
+
+
+.expand-collapse {
+  cursor: pointer;
+}

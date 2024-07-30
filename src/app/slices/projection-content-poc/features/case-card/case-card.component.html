@@ -1,0 +1,53 @@
+<div class="card-container">
+  CARDS
+  <div class="card-container">
+    <app-case-card-dumb *ngFor="let card of cards()">
+      <div card-header>
+        <h1>{{ card.title }}</h1>
+      </div>
+      <div card-content>
+        <p>{{ card.content }}</p>
+      </div>
+    </app-case-card-dumb>
+
+  </div>
+
+
+  ACCORDION
+  <app-case-accordion-dumb>
+    <app-case-accordion-item-dumb>
+        <div accordion-title>Title 1</div>
+        <div accordion-content>
+          The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.]
+           A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally bred for hunting.
+        </div>
+    </app-case-accordion-item-dumb>
+
+    <app-case-accordion-item-dumb>
+        <div accordion-title>Title 2</div>
+        <div accordion-content>This is the content for Title 2.</div>
+    </app-case-accordion-item-dumb>
+
+  </app-case-accordion-dumb>
+
+  <app-case-tree [treeData]="treeData">
+    <ng-template let-item>
+      <input type="checkbox" class="expand-collapse" (change)="toggleTreeItem(item)"
+      [checked]="item.expanded()" />
+
+
+      <span>
+        {{ item.display }}
+      </span>
+    </ng-template>
+  </app-case-tree>
+
+
+
+
+
+
+</div>
+
+
+

@@ -8,6 +8,11 @@ export const routes: Routes = [
     redirectTo: 'home',
   },
   {
+    path: 'rodinha-punk',
+    loadChildren: async () =>
+      (await import('./slices/projection-content-poc/routes/routes')).routes,
+  },
+  {
     path: 'signals',
     loadChildren: async () =>
       (await import('./slices/signals/routes/routes')).routes,
@@ -27,5 +32,6 @@ export const routes: Routes = [
     loadChildren: async () =>
       (await import('./slices/forms-study/routes/routes')).routes,
   },
+
   { path: '**', component: PageNotFoundComponent },
 ];

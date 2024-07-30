@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+:host ul {
+  list-style: none;
+  padding: 0 15px;
+}
+
+:host ul li {
+  margin: 5px 0;
+}

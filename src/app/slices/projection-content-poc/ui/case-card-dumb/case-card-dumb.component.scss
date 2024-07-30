@@ -1,0 +1,42 @@
+.card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  background-color: #fff;
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 200px;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+  background-color: #f7f7f7;
+  padding: 16px;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 1.25em;
+  font-weight: bold;
+  color: #333;
+}
+
+.card-body {
+  padding: 16px;
+  color: #666;
+  font-size: 1em;
+}
+
+.card-content {
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+.card-header::ng-deep [card-header] {
+  display: block;
+}
+
+.card-body::ng-deep [card-content] {
+  display: block;
+}
