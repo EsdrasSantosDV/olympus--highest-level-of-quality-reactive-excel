@@ -1,0 +1,21 @@
+<div>
+  Exemplo de teste
+
+  <!-- cria uma area customizavel no componente -->
+  <!-- <ng-content>
+  </ng-content> -->
+
+
+  <!-- não tem nada projetado -->
+  <div #ref>
+    <ng-content></ng-content>
+  </div>
+<!-- conteudo padrão -->
+  <span *ngIf="ref.children.length==0">
+    NÃO TEM NADA AQUI
+  </span>
+
+
+
+
+</div>

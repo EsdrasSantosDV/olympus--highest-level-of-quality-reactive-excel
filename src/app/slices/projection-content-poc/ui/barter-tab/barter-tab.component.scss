@@ -1,0 +1,18 @@
+/* Define o estilo geral das abas */
+.tab-button {
+  background-color: #f0f0f0; // Cor de fundo
+  border: none; // Sem borda
+  padding: 10px 20px; // Espaçamento interno
+  margin: 5px; // Margem entre os botões
+  cursor: pointer; // Cursor do mouse como ponteiro
+  outline: none; // Remove o contorno padrão ao focar
+
+  &:hover {
+    background-color: #d9d9d9; // Cor de fundo ao passar o mouse
+  }
+
+  &.active {
+    background-color: #c0c0c0; // Cor de fundo para a aba ativa
+    color: white; // Cor do texto para a aba ativa
+  }
+}

@@ -1,4 +1,29 @@
 <div class="card-container">
+<!--
+  <app-single-slot>
+
+
+
+  </app-single-slot> -->
+
+
+  <app-barter-tab>
+    <div *appTabDirective="'Negotiation'">Tab de NEGOCIAÇÃO</div>
+
+    <div *appTabDirective="'Simulation'">Tab SIMULATION</div>
+
+    <div *appTabDirective="'Pedidos'">Tab  PEDIDOS</div>
+  </app-barter-tab>
+
+
+
+  <!-- <app-multi-slot>
+
+    Esdras Projetado
+  </app-multi-slot> -->
+
+
+<!--
   CARDS
   <div class="card-container">
     <app-case-card-dumb *ngFor="let card of cards()">
@@ -40,7 +65,7 @@
         {{ item.display }}
       </span>
     </ng-template>
-  </app-case-tree>
+  </app-case-tree> -->
 
 
 

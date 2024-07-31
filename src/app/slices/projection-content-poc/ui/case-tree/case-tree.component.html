@@ -3,7 +3,7 @@
     <li *ngFor="let item of nodes">
       <ng-container *ngTemplateOutlet="nodeTemplate; context: { $implicit: item }">
       </ng-container>
-      <ng-container *ngIf="item.children && item.children.length > 0 && item.expanded()">
+      <ng-container *ngIf="item.children && item.children.length > 0">
         <ng-container *ngTemplateOutlet="
             treeTemplate;
             context: { $implicit: item.children }

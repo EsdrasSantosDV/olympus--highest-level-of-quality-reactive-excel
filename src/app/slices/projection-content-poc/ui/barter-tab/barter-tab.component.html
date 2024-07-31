@@ -1,0 +1,8 @@
+@for(tab of tabs(); track tab.title()) {
+  <button class="tab-button" [ngClass]="{'active': activeTabId() === tab.title()}" (click)="activeTabId.set(tab.title())">
+    {{ tab.title() }}
+  </button>
+}
+
+<ng-template [ngTemplateOutlet]="selectedTabTpl()"></ng-template>
+

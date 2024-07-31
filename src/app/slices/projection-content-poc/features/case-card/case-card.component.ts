@@ -4,11 +4,15 @@ import { CommonModule } from '@angular/common';
 import { CaseAccordionDumbComponent } from '../../ui/case-accordion-dumb/case-accordion-dumb.component';
 import { CaseAccordionItemDumbComponent } from '../../ui/case-accordion-item-dumb/case-accordion-item-dumb.component';
 import { CaseTreeComponent } from '../../ui/case-tree/case-tree.component';
+import { SingleSlotComponent } from '../../ui/single-slot/single-slot.component';
+import { MultiSlotComponent } from "../../ui/multi-slot/multi-slot.component";
+import { BarterTabComponent } from "../../ui/barter-tab/barter-tab.component";
+import { TabDirective } from '../../../../shared/directives/tab.directive';
 
 @Component({
   selector: 'app-case-card',
   standalone: true,
-  imports: [CaseCardDumbComponent,CommonModule,CaseAccordionDumbComponent,CaseAccordionItemDumbComponent,CaseTreeComponent],
+  imports: [CaseCardDumbComponent, CommonModule, TabDirective,CaseAccordionDumbComponent, CaseAccordionItemDumbComponent, CaseTreeComponent, SingleSlotComponent, MultiSlotComponent, BarterTabComponent],
   templateUrl: './case-card.component.html',
   styleUrl: './case-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -34,7 +38,11 @@ export class CaseCardComponent {
       value: '1',
       children: [
         { display: 'Amazonas', value: '11', expanded: signal(false) },
-        { display: 'Pará', value: '12', expanded: signal(false) },
+        { display: 'Pará', value: '12', expanded: signal(false),children:[
+          {
+            display:'Belem',value:'45',expanded:signal(false)
+          }
+        ] },
       ],
       expanded: signal(false),
     },
@@ -78,7 +86,14 @@ export class CaseCardComponent {
 
 
   public toggleTreeItem(item: MyTreeItem): void {
-    item.expanded.update(value=>!value);
+    this.recursiveToggle(item, !item.expanded());
+  }
+
+  private recursiveToggle(item: MyTreeItem, newState: boolean): void {
+    item.expanded.update(() => newState);
+    if (item.children) {
+      item.children.forEach(child => this.recursiveToggle(child, newState));
+    }
   }
 }
 
