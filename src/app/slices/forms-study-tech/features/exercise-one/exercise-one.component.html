@@ -1,0 +1,90 @@
+<div class="exercise-description">
+  <h2>Descrição do Exercício 1</h2>
+  <p>Neste exercício, você vai criar um formulário simples de cadastro de fazendas utilizando Template-Driven Forms no Angular. O objetivo é capturar informações básicas sobre a fazenda. O formulário deve conter 5 campos obrigatórios, e os dados preenchidos devem ser exibidos em tempo real na tela.</p>
+
+  <h3>Campos para o Formulário:</h3>
+  <ul>
+    <li><strong>Nome da Fazenda (farmName):</strong> Campo de texto para o nome da fazenda.</li>
+    <li><strong>Proprietário (ownerName):</strong> Campo de texto para o nome do proprietário da fazenda.</li>
+    <li><strong>Área Total (hectares) (totalArea):</strong> Campo numérico para a área total da fazenda em hectares.</li>
+    <li><strong>Localização (location):</strong> Campo de texto para a localização da fazenda.</li>
+    <li><strong>Data de Fundação (foundationDate):</strong> Campo de data para a data de fundação da fazenda.</li>
+  </ul>
+
+  <h3>Objetivos:</h3>
+  <ul>
+    <li>Criar um formulário que capture os dados acima.</li>
+    <li>Validar os campos obrigatórios.</li>
+    <li>Exibir os valores do formulário em tempo real no formato JSON.</li>
+    <li>Impedir a submissão do formulário caso algum campo obrigatório não esteja preenchido.</li>
+  </ul>
+</div>
+
+<form #customerForm="ngForm" (ngSubmit)="onSubmit(customerForm)">
+  <div >
+    <label for="name">Nome:</label>
+    <input type="text" id="name" name="name" [(ngModel)]="name" required>
+  </div>
+
+  <div >
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" [(ngModel)]="email" required>
+  </div>
+
+  <div >
+    <label for="phone">Telefone:</label>
+    <input type="tel" id="phone" name="phone" [(ngModel)]="phone" required>
+  </div>
+
+  <div >
+    <label for="address">Endereço:</label>
+    <input type="text" id="address" name="address" [(ngModel)]="adress">
+  </div>
+
+  <button type="submit" [disabled]="customerForm.invalid">Cadastrar</button>
+</form>
+
+
+
+<!-- <h2>Cadastro de Clientes</h2>
+
+<p>
+  BASEADO NESSE FORMS
+</p>
+
+
+
+
+{{
+  formValues() | json
+}} -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

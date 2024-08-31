@@ -1,3 +1,166 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f4f8;
+  margin: 0;
+  padding: 20px;
+}
+
+form {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="number"]
+{
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc; /* Borda padrão */
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+
+  &:focus {
+    border-color: #007bff; /* Borda azul quando em foco */
+    outline: none;
+  }
+
+  &.ng-invalid:focus {
+    border-color: #e53e3e; /* Borda vermelha quando inválido e em foco */
+  }
+
+  &.ng-touched.ng-valid:focus {
+    border-color: #42A948; /* Borda verde quando válido e em foco */
+  }
+
+  &.ng-touched.ng-valid:not(:focus) {
+    border-color: #ccc; /* Retorna à borda padrão quando perde o foco */
+  }
+}
+
+
+select {
+  appearance: none;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding-right: 30px;
+  background: url('data:image/svg+xml;utf8,<svg fill="%23333" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center/8px 10px;
+  transition: border-color 0.3s, background-color 0.3s;
+
+  &:focus {
+    border-color: #007bff;
+    background-color: #ebf4ff;
+    outline: none;
+  }
+
+  &.ng-invalid:focus {
+    border-color: #e53e3e;
+    background-color: #ffeef0;
+  }
+
+  &.ng-touched.ng-valid:focus {
+    border-color: #42A948;
+    background-color: #f0fff4;
+  }
+
+  &.ng-touched.ng-valid:not(:focus) {
+    border-color: #ccc;
+  }
+}
+
+/* Estilo global para botões */
+button {
+  background-color: #004080 !important;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+
+
+
+  &:active {
+    background-color: #004080;
+
+  }
+
+  &:disabled {
+    background-color: #cccccc;
+
+  }
+}
+
+
+.exercise-description {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  margin: 20px auto;
+
+  h2 {
+    font-size: 1.5rem;
+    color: #004080;
+    margin-bottom: 15px;
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    color: #0056b3;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  ul {
+    list-style-type: disc;
+    padding-left: 20px;
+
+    li {
+      font-size: 1rem;
+      color: #444;
+      margin-bottom: 10px;
+
+      strong {
+        color: #0056b3;
+      }
+    }
+  }
+}
+
+
+.error-message {
+  color: #e53e3e;
+  font-weight: bold;
+  margin-top: 10px;
+}

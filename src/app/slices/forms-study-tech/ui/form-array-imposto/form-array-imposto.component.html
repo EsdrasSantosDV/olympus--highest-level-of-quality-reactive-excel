@@ -1,0 +1,16 @@
+<form [formGroup]="taxForm">
+  <div formArrayName="taxes">
+    <div *ngFor="let tax of taxes.controls; let i = index" [formGroupName]="i">
+      <label for="taxName{{i}}">Nome do Imposto {{i + 1}}:</label>
+      <input id="taxName{{i}}" formControlName="name" placeholder="Imposto {{i + 1}}">
+
+      <label for="taxRate{{i}}">Porcentagem:</label>
+      <input id="taxRate{{i}}" type="number" formControlName="rate" placeholder="Porcentagem">
+
+      <button type="button" (click)="removeTax(i)">Remover Imposto</button>
+    </div>
+  </div>
+
+  <button type="button" (click)="addTax()">Adicionar Imposto</button>
+  <button type="submit" [disabled]="taxForm.invalid">Salvar Impostos</button>
+</form>

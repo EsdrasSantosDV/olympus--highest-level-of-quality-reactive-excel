@@ -32,6 +32,10 @@ export const routes: Routes = [
     loadChildren: async () =>
       (await import('./slices/forms-study/routes/routes')).routes,
   },
-
+  {
+    path: 'kt-lge',
+    loadChildren: async () =>
+      (await import('./slices/forms-study-tech/routes/routes')).routes,
+  },
   { path: '**', component: PageNotFoundComponent },
 ];

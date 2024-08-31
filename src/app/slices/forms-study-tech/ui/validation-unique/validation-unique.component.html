@@ -1,0 +1,16 @@
+<form #registrationForm="ngForm">
+  <div ngModelGroup="passwords" #passwordsGroup="ngModelGroup" matchPassword>
+    <label for="password">Senha:</label>
+    <input type="password" id="password" name="password" [(ngModel)]="user.password">
+    <label for="confirmPassword">Confirmar Senha:</label>
+    <input type="password" id="confirmPassword" name="confirmPassword" [(ngModel)]="user.confirmPassword">
+    <div *ngIf="passwordsGroup?.hasError('passwordMismatch')">
+      As senhas não coincidem.
+    </div>
+
+  </div>
+
+  <button type="submit" [disabled]="registrationForm.invalid">Registrar</button>
+</form>
+
+<pre>{{ user | json }}</pre>

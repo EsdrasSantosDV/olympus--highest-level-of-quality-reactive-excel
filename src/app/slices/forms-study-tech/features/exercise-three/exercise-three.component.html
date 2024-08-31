@@ -1,0 +1,51 @@
+<div class="exercise-description">
+  <h2>Descrição do Exercício 3</h2>
+  <p>Neste exercício, você vai criar um formulário dinâmico de cadastro de tipos de grãos utilizando Reactive Forms no Angular. O objetivo é capturar informações detalhadas sobre os grãos cultivados. O formulário deve conter 4 campos obrigatórios para cada tipo de grão, e os dados preenchidos devem ser exibidos em tempo real na tela.</p>
+
+  <h3>Campos para o Formulário:</h3>
+  <ul>
+    <li><strong>Nome do Grão (grainName):</strong> Campo de texto para o nome do grão.</li>
+    <li><strong>Quantidade em Toneladas (quantity):</strong> Campo numérico para a quantidade de grãos em toneladas.</li>
+    <li><strong>Data da Colheita (harvestDate):</strong> Campo de data para a data da colheita.</li>
+    <li><strong>Região de Produção (region):</strong> Campo de texto para a região onde o grão foi produzido.</li>
+  </ul>
+
+  <h3>Objetivos:</h3>
+  <ul>
+    <li>Criar um formulário que permita adicionar múltiplos tipos de grãos dinamicamente.</li>
+    <li>Validar os campos obrigatórios para cada grão adicionado.</li>
+    <li>Exibir os valores do formulário em tempo real no formato JSON.</li>
+    <li>Impedir a submissão do formulário caso algum campo obrigatório não esteja preenchido.</li>
+    <li>Permitir adicionar e remover tipos de grãos conforme necessário.</li>
+  </ul>
+</div>
+
+
+
+<form [formGroup]="pizzaForm" (ngSubmit)="onSubmit()">
+  <h2>Cadastro de Pizza</h2>
+
+  <div class="form-group">
+    <label for="size">Tamanho da Pizza:</label>
+    <select id="size" formControlName="size" class="custom-select">
+      <option value="pequena">Pequena</option>
+      <option value="media">Média</option>
+      <option value="grande">Grande</option>
+    </select>
+  </div>
+
+  <div formArrayName="ingredients">
+    <div *ngFor="let ingredient of ingredients.controls; let i = index" [formGroupName]="i" class="ingredient-group">
+      <label for="ingredient{{i}}">Ingrediente {{i + 1}}:</label>
+      <input id="ingredient{{i}}" formControlName="name" placeholder="Nome do Ingrediente" class="custom-input">
+      <button type="button" (click)="removeIngredient(i)" class="remove-button">Remover Ingrediente</button>
+    </div>
+  </div>
+
+  <div class="button-group">
+    <button type="button" (click)="addIngredient()" class="add-button">Adicionar Ingrediente</button>
+    <button type="submit" [disabled]="pizzaForm.invalid" class="submit-button">Salvar Pizza</button>
+  </div>
+</form>
+
+<pre>{{ pizzaForm.value | json }}</pre>

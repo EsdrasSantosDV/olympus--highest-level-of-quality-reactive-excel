@@ -1,0 +1,35 @@
+<form [formGroup]="parentForm" (ngSubmit)="onSubmit()">
+  <h2>Cadastro de Produto com Reactive Forms</h2>
+
+  <div class="form-group">
+    <label for="productQuantity">Quantidade de Produto:</label>
+    <app-exercicio-five-exemplo
+      formControlName="productQuantity"
+      [increment]="1">
+    </app-exercicio-five-exemplo>
+  </div>
+
+  <button type="submit" [disabled]="parentForm.invalid">Salvar Produto</button>
+</form>
+
+<pre>{{ parentForm.value | json }}</pre>
+
+<pre>{{ parentForm.valid | json }}</pre>
+
+
+<form #form="ngForm" (ngSubmit)="onSubmit()">
+  <h2>Cadastro de Produto com Template Driven</h2>
+  <div class="form-group">
+    <label for="productQuantity">Quantidade de Produto:</label>
+    <app-exercicio-five-exemplo
+      name="productQuantity"
+      [(ngModel)]="productQuantity"
+      [increment]="1">
+    </app-exercicio-five-exemplo>
+  </div>
+
+  <button type="submit" [disabled]="form.invalid">Salvar Produto</button>
+</form>
+
+<pre>{{ form.value | json }}</pre>
+<pre>{{ form.valid | json }}</pre>

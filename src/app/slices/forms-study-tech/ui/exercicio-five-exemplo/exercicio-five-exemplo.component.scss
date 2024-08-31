@@ -1,0 +1,19 @@
+.choose-quantity {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f7f7f7;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+  height: 100px;
+
+  .quantity {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    width: 50px;
+    text-align: center;
+  }
+}

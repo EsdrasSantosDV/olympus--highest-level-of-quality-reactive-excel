@@ -13,6 +13,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { materialModules } from '../../../../shared/utils/material/material-module';
+   //O { skipSelf: true } significa que o Angular vai procurar o ControlContainer em um nível acima do componente atual, ignorando o componente em que a injeção está ocorrendo.
 
 @Component({
   selector: 'app-form-family',
@@ -24,7 +25,7 @@ import { materialModules } from '../../../../shared/utils/material/material-modu
     {
       provide: ControlContainer,
       useFactory: () => inject(ControlContainer, { skipSelf: true }),
-    },
+       },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

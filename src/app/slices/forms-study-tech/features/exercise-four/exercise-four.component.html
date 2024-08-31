@@ -1,0 +1,69 @@
+<div class="exercise-description">
+  <h2>Descrição do Exercício 4</h2>
+  <p>
+    Neste exercício, você irá criar um formulário dinâmico utilizando Reactive Forms no Angular. O objetivo é permitir que o usuário adicione diferentes tipos de campos ao formulário em tempo de execução.
+  </p>
+
+  <h3>Objetivos do Exercício:</h3>
+  <ul>
+    <li><strong>Criar um Formulário Dinâmico:</strong></li>
+    <ul>
+      <li>Permitir que o usuário adicione novos campos ao formulário durante a execução.</li>
+      <li>Cada novo campo deve ter um nome e um tipo escolhido pelo usuário.</li>
+      <li>O formulário deve ser atualizado dinamicamente para incluir esses novos campos.</li>
+    </ul>
+    <li><strong>Validação dos Campos:</strong></li>
+    <ul>
+      <li>Campos de texto devem ser obrigatórios.</li>
+      <li>Campos numéricos devem ser positivos.</li>
+      <li>Campos de data devem ser datas válidas.</li>
+      <li>Campos booleanos devem ser obrigatórios.</li>
+    </ul>
+    <li><strong>Exibir os Valores do Formulário:</strong></li>
+    <ul>
+      <li>Os valores do formulário devem ser exibidos em tempo real no formato JSON.</li>
+      <li>O formulário deve ser considerado inválido se algum campo obrigatório não estiver preenchido corretamente.</li>
+    </ul>
+  </ul>
+
+  <h3>Campos do Formulário:</h3>
+  <ul>
+    <li><strong>Nome do Atributo (attributeName):</strong> Campo de texto para o nome do novo atributo a ser adicionado.</li>
+    <li><strong>Tipo do Atributo (attributeType):</strong> Seleção do tipo de dado do novo atributo (texto, número, data, booleano).</li>
+  </ul>
+
+  <h3>Regras de Validação:</h3>
+  <ul>
+    <li>Todos os campos criados dinamicamente são obrigatórios.</li>
+    <li>Campos numéricos devem aceitar apenas valores positivos.</li>
+    <li>Campos de data devem aceitar apenas datas válidas.</li>
+  </ul>
+
+  <h3>Exemplo de Comportamento:</h3>
+  <ul>
+    <li>O usuário deve poder adicionar atributos como "Nome do Produto" (texto), "Preço" (número), "Data de Validade" (data) e "Está em Estoque" (booleano).</li>
+    <li>Se um campo obrigatório estiver inválido, o formulário deve impedir a submissão.</li>
+    <li>O JSON resultante deve refletir todos os campos e seus valores atualizados.</li>
+  </ul>
+</div>
+
+
+
+<form [formGroup]="documentForm" (ngSubmit)="onSubmit()">
+  <h2>Preencha os Detalhes do Documento</h2>
+
+  <div *ngFor="let attribute of documentAtribute()" class="form-group">
+    <label [for]="attribute.key">{{ attribute.key | titlecase }}:</label>
+
+    <ng-container [ngSwitch]="attribute.type">
+      <input *ngSwitchCase="'string'" type="text" [id]="attribute.key" [formControlName]="attribute.key">
+      <input *ngSwitchCase="'number'" type="number" [id]="attribute.key" [formControlName]="attribute.key">
+      <input *ngSwitchCase="'date'" type="date" [id]="attribute.key" [formControlName]="attribute.key">
+      <input *ngSwitchCase="'boolean'" type="checkbox" [id]="attribute.key" [formControlName]="attribute.key">
+    </ng-container>
+  </div>
+
+  <button type="submit" [disabled]="documentForm.invalid">Salvar Documento</button>
+</form>
+
+<pre>{{ documentForm.value | json }}</pre>

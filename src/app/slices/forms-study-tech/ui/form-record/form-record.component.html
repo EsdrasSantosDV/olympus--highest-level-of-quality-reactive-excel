@@ -1,0 +1,44 @@
+<form [formGroup]="fighterForm" (ngSubmit)="onSubmit()">
+  <h2>Adicionar Características ao Lutador</h2>
+
+
+  <div class="form-group">
+    <label for="attributeName">Nome do Atributo:</label>
+    <input type="text" id="attributeName" [(ngModel)]="nameSIG" [ngModelOptions]="{standalone: true}" placeholder="Ex: Força, Velocidade">
+    <button type="button" (click)="addAttribute()">Adicionar Atributo</button>
+  </div>
+
+  <div *ngIf="attributeKeys.length > 0">
+    <h3>Atributos Adicionados:</h3>
+    <div *ngFor="let key of attributeKeys">
+      <div class="attribute-item">
+        <label [for]="key">{{ key | titlecase }}:</label>
+        <input [id]="key" [formControlName]="key" placeholder="{{ key | titlecase }}">
+        <button type="button" (click)="removeAttribute(key)">Remover</button>
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="fighterForm.invalid">Salvar Lutador</button>
+</form>
+
+<pre>{{ fighterForm.value | json }}</pre>
+{{
+  nameSIG()
+}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

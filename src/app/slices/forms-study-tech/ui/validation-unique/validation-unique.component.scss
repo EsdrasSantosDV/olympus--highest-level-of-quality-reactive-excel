@@ -1,0 +1,118 @@
+/* Estilos gerais */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #e0e7ff;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+form {
+  background-color: #ffffff;
+  padding: 30px 50px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+label {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #2d3748;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="password"],
+select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 2px solid #cbd5e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s, background-color 0.3s;
+
+  &:focus {
+    border-color: #5a67d8;
+    background-color: #ebf4ff;
+    outline: none;
+  }
+
+  /* Estilo para campos válidos */
+  &.ng-valid.ng-touched {
+    background-color: #f0fff4; /* verde claro para campos válidos */
+  }
+
+  /* Estilo para campos inválidos */
+  &.ng-invalid.ng-touched {
+    background-color: #ffe5e5; /* vermelho claro para campos inválidos */
+    border-color: #e53e3e; /* opcional: adicionar borda vermelha para campos inválidos */
+  }
+}
+
+select {
+  appearance: none;
+  background: url('data:image/svg+xml;utf8,<svg fill="%234a5568" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 12px center/8px 10px;
+  padding-right: 35px;
+  background-color: #edf2f7;
+  border: 2px solid #cbd5e0;
+  border-radius: 8px;
+
+  &:focus {
+    border-color: #5a67d8;
+    background-color: #ebf4ff;
+    outline: none;
+  }
+
+  /* Estilo para campos válidos */
+  &.ng-valid.ng-touched {
+    background-color: #f0fff4; /* verde claro para campos válidos */
+  }
+
+  /* Estilo para campos inválidos */
+  &.ng-invalid.ng-touched {
+    background-color: #ffe5e5; /* vermelho claro para campos inválidos */
+    border-color: #e53e3e; /* opcional: adicionar borda vermelha para campos inválidos */
+  }
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4a5568;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+
+  &:hover {
+    background-color: #2d3748;
+  }
+
+  &:active {
+    transform: translateY(2px);
+  }
+}
+
+pre {
+  background-color: #edf2f7;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e0;
+  font-size: 0.875rem;
+  margin-top: 20px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: #2d3748;
+}

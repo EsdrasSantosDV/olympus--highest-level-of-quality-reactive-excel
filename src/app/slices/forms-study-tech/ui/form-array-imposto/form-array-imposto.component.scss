@@ -1,0 +1,122 @@
+
+// Variáveis para cores e estilos reutilizáveis
+$primary-color: #007bff;
+$secondary-color: #0056b3;
+$error-color: #dc3545;
+$background-color: #f0f2f5;
+$input-background: #f9f9f9;
+$input-border: #ddd;
+$input-focus-border: #007bff;
+$input-focus-bg: #ffffff;
+$box-shadow-color: rgba(0, 123, 255, 0.3);
+$font-family: 'Poppins', sans-serif;
+
+// Estilo do corpo da página
+body {
+  font-family: $font-family;
+  background-color: $background-color;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+// Estilo do formulário
+form {
+  background-color: #ffffff;
+  padding: 25px 35px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+// Estilo das labels
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 1rem;
+  color: #555555;
+}
+
+// Estilo geral para inputs
+input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 10px;
+  border: 1px solid $input-border;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #333333;
+  background-color: $input-background;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+
+  &:focus {
+    border-color: $input-focus-border;
+    background-color: $input-focus-bg;
+    outline: none;
+    box-shadow: 0 0 8px $box-shadow-color;
+  }
+
+  &::placeholder {
+    color: #aaaaaa;
+  }
+
+  &:not(:placeholder-shown) {
+    border-color: #28a745;
+  }
+}
+
+// Estilo para os botões
+button {
+  width: 100%;
+  padding: 12px;
+  background-color: $primary-color;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    background-color: $secondary-color;
+  }
+
+  &:active {
+    transform: translateY(2px);
+  }
+
+  &[type="button"] {
+    width: auto;
+    background-color: $error-color;
+    margin-top: 0;
+    margin-right: 10px;
+
+    &:hover {
+      background-color: darken($error-color, 10%);
+    }
+  }
+}
+
+// Estilo para o grupo de formulários
+.form-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  input {
+    flex: 1;
+  }
+
+  button {
+    flex-shrink: 0;
+  }
+}

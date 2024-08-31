@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { CaseCardDumbComponent } from '../../ui/case-card-dumb/case-card-dumb.component';
 import { CommonModule } from '@angular/common';
 import { CaseAccordionDumbComponent } from '../../ui/case-accordion-dumb/case-accordion-dumb.component';
@@ -8,7 +8,8 @@ import { SingleSlotComponent } from '../../ui/single-slot/single-slot.component'
 import { MultiSlotComponent } from "../../ui/multi-slot/multi-slot.component";
 import { BarterTabComponent } from "../../ui/barter-tab/barter-tab.component";
 import { TabDirective } from '../../../../shared/directives/tab.directive';
-
+import { from, of } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 @Component({
   selector: 'app-case-card',
   standalone: true,
@@ -17,7 +18,8 @@ import { TabDirective } from '../../../../shared/directives/tab.directive';
   styleUrl: './case-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CaseCardComponent {
+export class CaseCardComponent implements OnInit {
+
   cards = signal([
     { title: 'Título do Card 1', content: 'Conteúdo do Card 1' },
     { title: 'Título do Card 2', content: 'Conteúdo do Card 2' },
@@ -95,6 +97,25 @@ export class CaseCardComponent {
       item.children.forEach(child => this.recursiveToggle(child, newState));
     }
   }
+
+
+
+//SIMULANDO UMA REQUEST
+produtos$ = from<Produto[]>([
+  { tipo: 'faixa jiu jitsu', modelo: 'Faixa Preta' },
+  { tipo: 'luvas boxe', modelo: 'Luvas de Ouro' },
+  { tipo: 'faixa jiu jitsu', modelo: 'Faixa Azul' },
+  { tipo: 'kimono', modelo: 'Kimono Leve' }
+]);
+ngOnInit(): void {
+  const gilbertinho = this.produtos$.pipe(
+    filter(produto => produto.tipo === 'faixa jiu jitsu'),
+    map(produto => `Nova ${produto.tipo} disponível: ${produto.modelo}`))
+    .subscribe((value)=>console.log("chegou a faixa",value));
+}
+
+
+
 }
 
 
@@ -103,4 +124,8 @@ export interface MyTreeItem {
   expanded: WritableSignal<boolean>;
   display: string;
   value: string;
+}
+interface Produto {
+  tipo: string;
+  modelo: string;
 }
