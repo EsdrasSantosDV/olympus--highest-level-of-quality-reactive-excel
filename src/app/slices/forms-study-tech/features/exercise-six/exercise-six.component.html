@@ -1,1 +1,68 @@
-<p>exercise-six works!</p>
+<div class="exercise-description">
+  <h2>Descrição do Exercício 6</h2>
+  <p>
+    Neste exercício, você implementará um formulário que captura a seleção de uma Regional e, com base nela, atualiza as opções disponíveis para seleção de Filiais. Utilizando Template-Driven Forms no Angular, o objetivo é entender como utilizar RxJS para reatividade e escrita declarativa em formulários.
+  </p>
+
+  <h3>Objetivos do Exercício:</h3>
+  <ul>
+    <li><strong>Criar o Formulário de Seleção:</strong></li>
+    <ul>
+      <li>O formulário deve permitir que o usuário selecione uma Regional.</li>
+      <li>Com base na Regional selecionada, o formulário deve atualizar automaticamente as opções de Filial disponíveis para seleção.</li>
+    </ul>
+    <li><strong>Integração com RxJS:</strong></li>
+    <ul>
+      <li>Utilizar RxJS para observar a seleção da Regional e, de forma reativa, atualizar a lista de Filiais disponíveis.</li>
+      <li>Implementar uma escrita declarativa para lidar com as mudanças no formulário.</li>
+    </ul>
+    <li><strong>Integração com Signals:</strong></li>
+    <ul>
+      <li>Utilizar signals para observar a seleção da Regional e, de forma reativa, atualizar a lista de Filiais disponíveis.</li>
+      <li>Implementar uma escrita declarativa para lidar com as mudanças no formulário.</li>
+    </ul>
+    <li><strong>Submissão do Formulário:</strong></li>
+    <ul>
+      <li>O botão de submissão deve estar desativado até que uma Regional e uma Filial sejam selecionadas.</li>
+      <li>Ao submeter o formulário com sucesso, os dados devem ser processados (por exemplo, exibidos no console ou enviados a um serviço).</li>
+    </ul>
+  </ul>
+
+  <h3>Exemplo de Comportamento:</h3>
+  <ul>
+    <li>Ao selecionar uma Regional, a lista de Filiais é atualizada automaticamente para exibir apenas as Filiais associadas àquela Regional.</li>
+    <li>O formulário só pode ser enviado quando tanto a Regional quanto a Filial estiverem selecionadas.</li>
+  </ul>
+</div>
+
+
+<div class="form-container">
+  <h2>Cadastro de Regional e Filial</h2>
+
+  <form #regionForm="ngForm">
+    <div class="form-group">
+      <label for="regional">Regional:</label>
+      <select
+        id="regional"
+        name="regional"
+      >
+        <option *ngFor="let regional of regionals()" [value]="regional.id">
+          {{ regional.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="branch">Filial:</label>
+      <select id="branch" name="branch" >
+        <option *ngFor="let branch of branches()" [value]="branch.id">
+          {{ branch.name }}
+        </option>
+      </select>
+    </div>
+
+    <button type="submit" [disabled]="regionForm.invalid">Salvar</button>
+  </form>
+
+  <pre>{{ regionForm.value | json }}</pre>
+</div>

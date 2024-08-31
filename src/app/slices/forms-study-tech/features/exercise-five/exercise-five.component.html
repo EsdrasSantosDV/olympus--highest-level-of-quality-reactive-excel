@@ -1,3 +1,55 @@
+<div class="exercise-description">
+  <h2>
+    Descrição do Exercício 5: Controle Personalizado com Control Value Accessor
+  </h2>
+  <p>
+    Neste exercício, você implementará um formulário de cadastro de produto
+    utilizando Angular, onde será possível interagir com um controle
+    personalizado que representa um campo de texto simples. O objetivo é
+    compreender como integrar controles personalizados em formulários utilizando
+    o <strong>Control Value Accessor</strong>, tanto em Template-Driven Forms
+    quanto em Reactive Forms.
+  </p>
+  <h3>Objetivos do Exercício:</h3>
+  <ul>
+    <li><strong>Criar o Formulário de Cadastro de Produto:</strong></li>
+    <ul>
+      <li>
+        O formulário deve ter um campo obrigatório, onde o usuário possa inserir
+        uma descrição do produto.
+      </li>
+    </ul>
+    <li><strong>Integração com Controle Personalizado:</strong></li>
+    <ul>
+      <li>
+        Utilizar um controle personalizado (exemplo: um campo de texto
+        customizado) para capturar a descrição do produto.
+      </li>
+      <li>
+        Implementar esse controle personalizado de forma que ele possa ser
+        utilizado tanto em Template-Driven Forms quanto em Reactive Forms
+        utilizando o <strong>Control Value Accessor</strong>.
+      </li>
+    </ul>
+    <li><strong>Validações Implementadas:</strong></li>
+    <ul>
+      <li>Validar que o campo de descrição não esteja vazio.</li>
+      <li>Exibir uma mensagem de erro se o campo estiver vazio.</li>
+    </ul>
+    <li><strong>Submissão do Formulário:</strong></li>
+    <ul>
+      <li>
+        O botão de submissão deve estar desativado até que o formulário seja
+        considerado válido.
+      </li>
+      <li>
+        Ao submeter o formulário com sucesso, os dados do produto devem ser
+        processados (por exemplo, exibidos no console ou enviados a um serviço).
+      </li>
+    </ul>
+  </ul>
+</div>
+
 <form [formGroup]="parentForm" (ngSubmit)="onSubmit()">
   <h2>Cadastro de Produto com Reactive Forms</h2>
 
@@ -15,7 +67,6 @@
 <pre>{{ parentForm.value | json }}</pre>
 
 <pre>{{ parentForm.valid | json }}</pre>
-
 
 <form #form="ngForm" (ngSubmit)="onSubmit()">
   <h2>Cadastro de Produto com Template Driven</h2>
