@@ -1,1 +1,31 @@
-<p>chips-control-value-accessor works!</p>
+<mat-form-field>
+  <mat-label>{{ titleSIG() }}</mat-label>
+  <mat-chip-grid #chipGrid>
+    @for (optionChip of selectedSIG(); track optionChip) {
+      <mat-chip-row (removed)="removeChip(optionChip)">
+        {{ optionChip[keySIG()] }}
+        <button matChipRemove [attr.aria-label]="'remove ' + optionChip">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip-row>
+    }
+  </mat-chip-grid>
+  <input (matChipInputTokenEnd)="addChip($event)"
+         [(ngModel)]="inputValueSIG"
+         [matAutocomplete]="auto"
+         [matChipInputFor]="chipGrid" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+         [placeholder]="placeholderSIG()"
+         name="inputValue" />
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedOption($event)">
+    @for (optionFiltered of optionsFilteredSIG(); track optionFiltered) {
+      <mat-option [value]="optionFiltered">{{ optionFiltered[keySIG()] }}</mat-option>
+    }
+  </mat-autocomplete>
+</mat-form-field>
+
+{{
+  inputValueSIG() | json
+}}
+{{
+  inputValuePerformedSIG() | json
+}}
