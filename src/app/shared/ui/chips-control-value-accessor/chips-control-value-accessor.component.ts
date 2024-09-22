@@ -33,6 +33,7 @@ export class ChipsControlValueAccessorComponent implements ControlValueAccessor 
   keySIG = input.required<string>();
   selectedSIG = signal<any[]>([]);
   inputValueSIG = signal<string>('');
+  disabledSIG = signal(false);
   inputValuePerformedSIG = toSignal(toObservable(this.inputValueSIG).pipe(
     debounceTime(300),
     distinctUntilChanged(),
@@ -89,5 +90,9 @@ export class ChipsControlValueAccessorComponent implements ControlValueAccessor 
     this.selectedSIG.update((value) => [...value, $event.option.value]);
     this.onChanged(this.selectedSIG());
     this.onTouched();
+  }
+
+  setDisabledState(isDisabled: boolean) {
+    this.disabledSIG.set(isDisabled);
   }
 }

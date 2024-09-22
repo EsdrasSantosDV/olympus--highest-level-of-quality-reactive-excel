@@ -1,6 +1,6 @@
 <mat-form-field>
   <mat-label>{{ titleSIG() }}</mat-label>
-  <mat-chip-grid #chipGrid>
+  <mat-chip-grid #chipGrid [disabled]="disabledSIG()">
     @for (optionChip of selectedSIG(); track optionChip) {
       <mat-chip-row (removed)="removeChip(optionChip)">
         {{ optionChip[keySIG()] }}
@@ -12,7 +12,8 @@
   </mat-chip-grid>
   <input
     [(ngModel)]="inputValueSIG"
-    [matAutocomplete]="auto" [matChipInputFor]="chipGrid"
+    [disabled]="disabledSIG()" [matAutocomplete]="auto"
+    [matChipInputFor]="chipGrid"
     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
     [placeholder]="placeholderSIG()"
     name="inputValue" />

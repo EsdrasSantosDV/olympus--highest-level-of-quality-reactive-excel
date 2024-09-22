@@ -60,7 +60,7 @@ export class ComponenteDeExplicacaoComponent implements OnInit {
 
   ngOnInit(): void {
 
-
+    this.form.disable();
   }
 
 }
