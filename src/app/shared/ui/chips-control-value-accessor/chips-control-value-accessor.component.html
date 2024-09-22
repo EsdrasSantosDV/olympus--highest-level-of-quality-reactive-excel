@@ -10,22 +10,15 @@
       </mat-chip-row>
     }
   </mat-chip-grid>
-  <input (matChipInputTokenEnd)="addChip($event)"
-         [(ngModel)]="inputValueSIG"
-         [matAutocomplete]="auto"
-         [matChipInputFor]="chipGrid" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-         [placeholder]="placeholderSIG()"
-         name="inputValue" />
+  <input
+    [(ngModel)]="inputValueSIG"
+    [matAutocomplete]="auto" [matChipInputFor]="chipGrid"
+    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+    [placeholder]="placeholderSIG()"
+    name="inputValue" />
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedOption($event)">
     @for (optionFiltered of optionsFilteredSIG(); track optionFiltered) {
       <mat-option [value]="optionFiltered">{{ optionFiltered[keySIG()] }}</mat-option>
     }
   </mat-autocomplete>
 </mat-form-field>
-
-{{
-  inputValueSIG() | json
-}}
-{{
-  inputValuePerformedSIG() | json
-}}

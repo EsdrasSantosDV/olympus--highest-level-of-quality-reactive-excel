@@ -1,10 +1,10 @@
 <div class="container-global">
   <form [formGroup]="form" class="form-wrapper">
     Reactive Forms
-    <p>
-      Valor do Formulario reativo
-      {{ form.value | json }}
-    </p>
+    <!--    <p>-->
+    <!--      Valor do Formulario reativo-->
+    <!--      {{ form.value | json }}-->
+    <!--    </p>-->
 
     <app-chips-control-value-accessor [dataSIG]="(pokemons$ | async) ?? []" [keySIG]="'name'"
                                       [placeholderSIG]="'Digite o nome do pokemon'"
@@ -18,20 +18,21 @@
   </form>
 
 
-  <form #customerForm="ngForm" *ngIf="false" class="form-wrapper">
+  <form #customerForm="ngForm" class="form-wrapper">
     Template Driven
     <app-chips-control-value-accessor [(ngModel)]="pokemonsTemplateDriven" [dataSIG]="(pokemons$ | async) ?? []"
                                       [keySIG]="'name'"
                                       [placeholderSIG]="'Digite o nome do pokemon'"
                                       [titleSIG]="'Escolha os seus pokemons'"
+                                      class="example-chip-list"
                                       name="pokemonsTemplateDriven">
 
     </app-chips-control-value-accessor>
-    <p>
-      Valor do Formulario Template
-      {{ customerForm.value | json }}
+    <!--    <p>-->
+    <!--      Valor do Formulario Template-->
+    <!--      {{ customerForm.value | json }}-->
 
-    </p>
+    <!--    </p>-->
   </form>
 
 </div>

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, forwardRef, input, signal
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatOptionModule } from '@angular/material/core';
@@ -45,8 +45,11 @@ export class ChipsControlValueAccessorComponent implements ControlValueAccessor 
       const valueInput = this.inputValuePerformedSIG();
       const allOptions = this.dataSIG();
       const keyOption = this.keySIG();
+      const selectedOptions = this.selectedSIG();
       return allOptions.filter((value) => {
-          return value[keyOption].toLowerCase().includes(valueInput.toLowerCase());
+          const optionContainsTheSpecificString = value[keyOption].toLowerCase().includes(valueInput.toLowerCase());
+          const optionHasAlreadyBeenSelected = selectedOptions.includes(value);
+          return optionContainsTheSpecificString && !optionHasAlreadyBeenSelected;
         },
       );
     });
@@ -69,17 +72,22 @@ export class ChipsControlValueAccessorComponent implements ControlValueAccessor 
   }
 
   removeChip(optionChip: any) {
-    console.log('removendo a caceta');
-  }
+    const valueSelected = this.selectedSIG();
+    const index = valueSelected.indexOf(optionChip);
 
+    if (index >= 0) {
+      valueSelected.splice(index, 1);
 
-  addChip($event: MatChipInputEvent) {
-    console.log('esdras esteve aqui 1');
+      this.selectedSIG.set([...valueSelected]);
+      this.onChanged(this.selectedSIG());
+      this.onTouched();
+    }
   }
 
   selectedOption($event: MatAutocompleteSelectedEvent) {
-    console.log('esdras esteve aqui SELECTED');
     this.inputValueSIG.set('');
     this.selectedSIG.update((value) => [...value, $event.option.value]);
+    this.onChanged(this.selectedSIG());
+    this.onTouched();
   }
 }

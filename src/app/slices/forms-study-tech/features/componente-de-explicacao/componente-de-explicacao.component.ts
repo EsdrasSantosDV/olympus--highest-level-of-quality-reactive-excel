@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
@@ -10,6 +10,8 @@ import {
   ChipsControlValueAccessorComponent,
 } from '../../../../shared/ui/chips-control-value-accessor/chips-control-value-accessor.component';
 import { PokemonService } from '../../../../core/services/pokemon.service';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Pokemon } from '../../../../shared/types/interfaces/pokemon';
 
 @Component({
   selector: 'app-componente-de-explicacao',
@@ -30,18 +32,35 @@ import { PokemonService } from '../../../../core/services/pokemon.service';
   styleUrl: './componente-de-explicacao.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ComponenteDeExplicacaoComponent {
+export class ComponenteDeExplicacaoComponent implements OnInit {
+
   formBuilder = inject(FormBuilder);
   pokemonService = inject(PokemonService);
 
   //REACTIVE
   form = this.formBuilder.group({
-    pokemons: this.formBuilder.control([]),
+    pokemons: this.formBuilder.control<Pokemon[]>([]),
   });
 
   pokemons$ = this.pokemonService.getPokemons();
+  pokemonsSIG = toSignal(this.pokemons$, { initialValue: [] });
+  pokemonsTemplateDriven = signal<Pokemon[]>(this.pokemonsSIG());
 
-  //TEMPLATE
-  pokemonsTemplateDriven = signal([]);
+  constructor() {
+    effect(() => {
+      if (this.pokemonsSIG().length > 0) {
+        const pokemon = this.pokemonsSIG()[0];
+        this.form.get('pokemons')?.setValue([pokemon]);
+        this.pokemonsTemplateDriven.set([pokemon]);
+      }
+    }, {
+      allowSignalWrites: true,
+    });
+  }
+
+  ngOnInit(): void {
+
+
+  }
 
 }
