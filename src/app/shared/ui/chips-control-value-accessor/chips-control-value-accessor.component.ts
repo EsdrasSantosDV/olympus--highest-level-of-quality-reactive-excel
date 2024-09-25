@@ -41,19 +41,60 @@ export class ChipsControlValueAccessorComponent implements ControlValueAccessor 
     initialValue: '',
   });
 
-  optionsFilteredSIG =
-    computed(() => {
-      const valueInput = this.inputValuePerformedSIG();
-      const allOptions = this.dataSIG();
-      const keyOption = this.keySIG();
-      const selectedOptions = this.selectedSIG();
-      return allOptions.filter((value) => {
-          const optionContainsTheSpecificString = value[keyOption].toLowerCase().includes(valueInput.toLowerCase());
-          const optionHasAlreadyBeenSelected = selectedOptions.includes(value);
-          return optionContainsTheSpecificString && !optionHasAlreadyBeenSelected;
-        },
-      );
-    });
+  optionsFilteredSIG = computed(() => {
+    const search = this.inputValuePerformedSIG().toLowerCase();
+    const data = this.dataSIG();
+    const key = this.keySIG();
+    const selected = this.selectedSIG();
+
+    return this.binarySearchFilter(data, search, key, selected);
+  });
+
+  private binarySearchFilter(data: any[], search: string, key: string, selected: any[]): any[] {
+    //if (!search) return data.filter(option => !selected.includes(option));
+
+    let low = 0;
+    let high = data.length - 1;
+    let results: any[] = [];
+
+    while (low <= high) {
+      const mid = Math.floor((low + high) / 2);
+      const midVal = data[mid][key].toLowerCase();
+
+      if (midVal.startsWith(search)) {
+        // Encontrar todos os elementos que correspondem
+        results = [data[mid], ...this.collectMatches(data, mid, key, search)];
+        break;
+      } else if (midVal < search) {
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+
+    // Filtrar os elementos já selecionados
+    return results.filter(option => !selected.includes(option));
+  }
+
+  private collectMatches(data: any[], mid: number, key: string, search: string): any[] {
+    let matches = [];
+    let left = mid - 1;
+    let right = mid + 1;
+
+    // Check left side
+    while (left >= 0 && data[left][key].toLowerCase().startsWith(search)) {
+      matches.push(data[left]);
+      left--;
+    }
+
+    // Check right side
+    while (right < data.length && data[right][key].toLowerCase().startsWith(search)) {
+      matches.push(data[right]);
+      right++;
+    }
+
+    return matches;
+  }
 
 
   onChanged!: (value: any) => void;
@@ -75,10 +116,8 @@ export class ChipsControlValueAccessorComponent implements ControlValueAccessor 
   removeChip(optionChip: any) {
     const valueSelected = this.selectedSIG();
     const index = valueSelected.indexOf(optionChip);
-
     if (index >= 0) {
       valueSelected.splice(index, 1);
-
       this.selectedSIG.set([...valueSelected]);
       this.onChanged(this.selectedSIG());
       this.onTouched();

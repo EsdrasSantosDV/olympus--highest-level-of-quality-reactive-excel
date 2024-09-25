@@ -1,7 +1,7 @@
 <mat-form-field>
   <mat-label>{{ titleSIG() }}</mat-label>
   <mat-chip-grid #chipGrid [disabled]="disabledSIG()">
-    @for (optionChip of selectedSIG(); track optionChip) {
+    @for (optionChip of selectedSIG(); track optionChip.id) {
       <mat-chip-row (removed)="removeChip(optionChip)">
         {{ optionChip[keySIG()] }}
         <button matChipRemove [attr.aria-label]="'remove ' + optionChip">
@@ -18,7 +18,7 @@
     [placeholder]="placeholderSIG()"
     name="inputValue" />
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedOption($event)">
-    @for (optionFiltered of optionsFilteredSIG(); track optionFiltered) {
+    @for (optionFiltered of optionsFilteredSIG(); track optionFiltered.id) {
       <mat-option [value]="optionFiltered">{{ optionFiltered[keySIG()] }}</mat-option>
     }
   </mat-autocomplete>

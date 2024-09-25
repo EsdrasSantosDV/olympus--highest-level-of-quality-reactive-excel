@@ -5,7 +5,6 @@
       Valor do Formulario reativo
       {{ form.value | json }}
     </p>
-
     <app-chips-control-value-accessor [dataSIG]="(pokemons$ | async) ?? []" [keySIG]="'name'"
                                       [placeholderSIG]="'Digite o nome do pokemon'"
                                       [titleSIG]="'Escolha os seus pokemons'"
@@ -13,11 +12,7 @@
                                       formControlName="pokemons">
 
     </app-chips-control-value-accessor>
-
-
   </form>
-
-
   <form #customerForm="ngForm" class="form-wrapper">
     Template Driven
     <app-chips-control-value-accessor [(ngModel)]="pokemonsTemplateDriven" [dataSIG]="(pokemons$ | async) ?? []"
@@ -35,4 +30,7 @@
     </p>
   </form>
 
+  {{
+    (pokemons$ | async)?.length
+  }}
 </div>

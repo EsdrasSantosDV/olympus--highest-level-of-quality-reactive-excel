@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
@@ -47,20 +47,19 @@ export class ComponenteDeExplicacaoComponent implements OnInit {
   pokemonsTemplateDriven = signal<Pokemon[]>(this.pokemonsSIG());
 
   constructor() {
-    effect(() => {
-      if (this.pokemonsSIG().length > 0) {
-        const pokemon = this.pokemonsSIG()[0];
-        this.form.get('pokemons')?.setValue([pokemon]);
-        this.pokemonsTemplateDriven.set([pokemon]);
-      }
-    }, {
-      allowSignalWrites: true,
-    });
+    // effect(() => {
+    //   if (this.pokemonsSIG().length > 0) {
+    //     const pokemon = this.pokemonsSIG()[0];
+    //     this.form.get('pokemons')?.setValue([pokemon]);
+    //     this.pokemonsTemplateDriven.set([pokemon]);
+    //   }
+    // }, {
+    //   allowSignalWrites: true,
+    // });
   }
 
   ngOnInit(): void {
 
-    this.form.disable();
   }
 
 }
