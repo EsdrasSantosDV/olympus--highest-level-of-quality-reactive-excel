@@ -5,17 +5,23 @@
   </mat-label>
   <mat-select [(ngModel)]="selectedSIG" multiple>
     <mat-checkbox
+      [formControl]="selectAllCheckbox"
     >
-      Selecionar todos
+      Selecionar todos {{
+        selectAllCheckbox.value | json
+      }}
     </mat-checkbox>
-    @for (group of dataSIG(); track group) {
+    @for (group of dataSIG(); track group; let idx = $index) {
       <mat-optgroup [label]="group[keySIG()]"
       >
         {{
           group.display
         }}
-        <mat-checkbox
-        >
+        {{
+          computedGroupsEnabled()[idx].expandedGroup() | json
+        }}
+        <mat-checkbox [(ngModel)]="computedGroupsEnabled()[idx].expandedGroup">
+
         </mat-checkbox>
         @for (option of group.children; track option) {
           <mat-option [value]="option">{{ option[keySIG()] !== undefined ? option[keySIG()] : 'Valor não encontrado' }}
@@ -25,3 +31,7 @@
     }
   </mat-select>
 </mat-form-field>
+
+{{
+  computedGroupsEnabled() | json
+}}

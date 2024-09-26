@@ -60,7 +60,8 @@ export class ComponenteDeExplicacaoComponent {
           display: regionName,
           expanded: signal(false),
           children: [],
-          key: regionName,
+          key: '',
+          id: state.id,
         };
       }
       regionsMap[regionName].children!.push(state);
