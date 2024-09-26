@@ -5,24 +5,37 @@
       Valor do Formulario reativo
       {{ form.value | json }}
     </p>
-    <app-chips-control-value-accessor [dataSIG]="(pokemons$ | async) ?? []" [keySIG]="'name'"
-                                      [placeholderSIG]="'Digite o nome do pokemon'"
-                                      [titleSIG]="'Escolha os seus pokemons'"
-                                      class="example-chip-list"
-                                      formControlName="pokemons">
+    <!-- <app-chips-control-value-accessor [dataSIG]="(pokemons$ | async) ?? []" [keySIG]="'name'"
+                                       [placeholderSIG]="'Digite o nome do pokemon'"
+                                       [titleSIG]="'Escolha os seus pokemons'"
+                                       class="example-chip-list"
+                                       formControlName="pokemons">
 
-    </app-chips-control-value-accessor>
+     </app-chips-control-value-accessor>
+ -->
+
+
+    <app-select-tree-value-accessor [dataSIG]="(states$ | async) ?? []" [keySIG]="'nome'"
+                                    [placeholderSIG]="'Escolha seus estados'"
+                                    [titleSIG]="'Escolha seus estados'"
+                                    class="example-chip-list"
+                                    formControlName="states">
+
+    </app-select-tree-value-accessor>
+
+
   </form>
   <form #customerForm="ngForm" class="form-wrapper">
     Template Driven
-    <app-chips-control-value-accessor [(ngModel)]="pokemonsTemplateDriven" [dataSIG]="(pokemons$ | async) ?? []"
+    <!--<app-chips-control-value-accessor [(ngModel)]="pokemonsTemplateDriven" [dataSIG]="(pokemons$ | async) ?? []"
                                       [keySIG]="'name'"
                                       [placeholderSIG]="'Digite o nome do pokemon'"
                                       [titleSIG]="'Escolha os seus pokemons'"
                                       class="example-chip-list"
                                       name="pokemonsTemplateDriven">
 
-    </app-chips-control-value-accessor>
+    </app-chips-control-value-accessor>-->
+
     <p>
       Valor do Formulario Template
       {{ customerForm.value | json }}
@@ -30,7 +43,7 @@
     </p>
   </form>
 
-  {{
-    (pokemons$ | async)?.length
-  }}
+  <!--  {{
+      (pokemons$ | async)?.length
+    }}-->
 </div>

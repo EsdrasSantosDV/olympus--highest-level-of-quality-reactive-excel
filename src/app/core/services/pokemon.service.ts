@@ -12,10 +12,11 @@ export class PokemonService {
 
   getPokemons(): Observable<Pokemon[]> {
     return this.http.get<PokemonResponse>(this.initialUrl).pipe(
-      map(response => this.generatePokemonDuplicates(response.results)),
+      map(response => response.results),
       shareReplay(1),
     );
   }
+
   //DUPLICAR OS POKEMONS
 
   private generatePokemonDuplicates(pokemons: Pokemon[]): Pokemon[] {
@@ -27,7 +28,7 @@ export class PokemonService {
         duplicatedPokemons.push({
           id: id++,
           name: `${pokemon.name}${i}`,
-          url:pokemon.url
+          url: pokemon.url,
         });
       }
     });

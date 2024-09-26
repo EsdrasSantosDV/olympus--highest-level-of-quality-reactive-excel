@@ -1,0 +1,27 @@
+<mat-form-field>
+  <mat-label>{{
+      titleSIG()
+    }}
+  </mat-label>
+  <mat-select [(ngModel)]="selectedSIG" multiple>
+    <mat-checkbox
+    >
+      Selecionar todos
+    </mat-checkbox>
+    @for (group of dataSIG(); track group) {
+      <mat-optgroup [label]="group[keySIG()]"
+      >
+        {{
+          group.display
+        }}
+        <mat-checkbox
+        >
+        </mat-checkbox>
+        @for (option of group.children; track option) {
+          <mat-option [value]="option">{{ option[keySIG()] !== undefined ? option[keySIG()] : 'Valor não encontrado' }}
+          </mat-option>
+        }
+      </mat-optgroup>
+    }
+  </mat-select>
+</mat-form-field>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
@@ -9,9 +9,12 @@ import { ChipsComponent } from '../../../../shared/ui/chips/chips.component';
 import {
   ChipsControlValueAccessorComponent,
 } from '../../../../shared/ui/chips-control-value-accessor/chips-control-value-accessor.component';
-import { PokemonService } from '../../../../core/services/pokemon.service';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { Pokemon } from '../../../../shared/types/interfaces/pokemon';
+import {
+  MyTreeItemBase,
+  SelectTreeValueAccessorComponent,
+} from '../../../../shared/ui/select-tree-value-accessor/select-tree-value-accessor.component';
+import { StateNation, StateService } from '../../../../core/services/states.service';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-componente-de-explicacao',
@@ -27,39 +30,45 @@ import { Pokemon } from '../../../../shared/types/interfaces/pokemon';
     MatChipsModule,
     ChipsComponent,
     ChipsControlValueAccessorComponent,
+    SelectTreeValueAccessorComponent,
   ],
   templateUrl: './componente-de-explicacao.component.html',
   styleUrl: './componente-de-explicacao.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ComponenteDeExplicacaoComponent implements OnInit {
+export class ComponenteDeExplicacaoComponent {
 
   formBuilder = inject(FormBuilder);
-  pokemonService = inject(PokemonService);
+  stateService = inject(StateService);
 
   //REACTIVE
   form = this.formBuilder.group({
-    pokemons: this.formBuilder.control<Pokemon[]>([]),
+    states: this.formBuilder.control<StateNation[]>([]),
   });
 
-  pokemons$ = this.pokemonService.getPokemons();
-  pokemonsSIG = toSignal(this.pokemons$, { initialValue: [] });
-  pokemonsTemplateDriven = signal<Pokemon[]>(this.pokemonsSIG());
+  states$ = this.stateService.getStateNation().pipe(
+    map((states) => this.convertToStateNationTree(states)),
+  );
 
-  constructor() {
-    // effect(() => {
-    //   if (this.pokemonsSIG().length > 0) {
-    //     const pokemon = this.pokemonsSIG()[0];
-    //     this.form.get('pokemons')?.setValue([pokemon]);
-    //     this.pokemonsTemplateDriven.set([pokemon]);
-    //   }
-    // }, {
-    //   allowSignalWrites: true,
-    // });
-  }
 
-  ngOnInit(): void {
-
+  convertToStateNationTree(items: StateNation[]): MyTreeItemBase<StateNation>[] {
+    const regionsMap: { [key: string]: MyTreeItemBase<StateNation> } = {};
+    items.forEach((state) => {
+      const regionName = state.region.nome;
+      if (!regionsMap[regionName]) {
+        regionsMap[regionName] = {
+          display: regionName,
+          expanded: signal(false),
+          children: [],
+          key: regionName,
+        };
+      }
+      regionsMap[regionName].children!.push(state);
+    });
+    return Object.values(regionsMap);
   }
 
 }
+
+
+
